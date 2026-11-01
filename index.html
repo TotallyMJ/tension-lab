@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Tension Lab</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,400;0,500;0,600;0,800;1,800&display=swap">
+<style>
+/* Layout: one play screen — wheel left, prompt + result right. Single dark look. */
+:root{
+  --bg:#0f0f0d; --panel:#191917; --line:#2c2b26; --fg:#f6f4ec; --muted:#9d9a8d; --yellow:#ffe500; --ink:#121210;
+  --font:"Prompt","Noto Sans Thai","Leelawadee UI",Tahoma,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font);font-size:16px;line-height:1.4;
+  padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));padding-block:16px;
+  display:flex;flex-direction:column;gap:18px;overflow-x:hidden}
+button{font-family:inherit;cursor:pointer;color:inherit}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+
+/* header */
+.bar{display:flex;align-items:center;gap:10px 18px;flex-wrap:wrap}
+.logo{font-weight:800;font-style:italic;font-size:1.5rem;margin-right:6px;letter-spacing:.01em}
+.logo span{color:var(--yellow)}
+.tabs{display:flex;gap:4px;margin-right:auto}
+.tab{background:none;border:none;padding:8px 14px;border-radius:999px;font-size:1rem;color:var(--muted)}
+.tab[aria-selected="true"]{background:var(--fg);color:var(--ink);font-weight:600}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.timer{display:flex;align-items:center;gap:2px;border:1px solid var(--line);border-radius:999px;padding:3px 4px 3px 14px}
+.timer output{font-size:1.25rem;font-weight:600;font-variant-numeric:tabular-nums;min-width:3.6em}
+.timer.done output{color:var(--yellow)}
+.tb{background:none;border:none;border-radius:999px;padding:5px 10px;font-size:.9rem;color:var(--muted)}
+.tb:hover{color:var(--fg);background:var(--panel)}
+.tb[aria-pressed="true"]{color:var(--fg);background:var(--panel)}
+.pill{background:none;border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:.95rem}
+.pill:hover{border-color:var(--muted)}
+
+main{flex:1;min-height:0;display:flex}
+.view{flex:1;min-width:0}
+
+/* play */
+#play{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;align-items:center}
+@media (max-width:860px){#play{grid-template-columns:1fr;gap:24px}}
+.wheel-wrap{width:min(72vh,100%,640px);aspect-ratio:1;justify-self:center}
+.wheel-wrap svg{width:100%;height:100%;display:block}
+.seg{fill:var(--panel);stroke:var(--line);stroke-width:1.5;transition:fill .3s}
+.seg.alt{fill:#1f1e1b}
+.seg.hit-a{fill:var(--yellow)}
+.seg.hit-b{fill:var(--fg)}
+.lab-en{fill:var(--yellow);font-weight:600;font-size:15px}
+.lab-th{fill:var(--fg);font-size:14px}
+.hit .lab-en,.hit .lab-th{fill:var(--ink)}
+.ring{fill:none;stroke:var(--yellow);stroke-width:6}
+.badge circle{fill:var(--yellow)}
+.badge text{fill:var(--ink);font-weight:800;font-size:16px}
+.hub{cursor:pointer}
+.hub circle{fill:var(--bg);stroke:var(--yellow);stroke-width:4}
+.hub:hover circle{fill:#24231f}
+.hub text{fill:var(--fg);font-weight:800;font-size:24px}
+
+.side-col{display:flex;flex-direction:column;gap:22px;max-width:560px;width:100%}
+.tables{display:flex;gap:6px;align-items:center;color:var(--muted);font-size:.95rem;flex-wrap:wrap}
+.tchip{background:none;border:1px solid var(--line);border-radius:999px;min-width:36px;padding:4px 10px;font-size:.95rem;position:relative}
+.tchip[aria-pressed="true"]{background:var(--yellow);border-color:var(--yellow);color:var(--ink);font-weight:600}
+.tchip.has:not([aria-pressed="true"])::after{content:"";position:absolute;top:3px;right:3px;width:6px;height:6px;border-radius:50%;background:var(--yellow)}
+.k{font-size:.85rem;color:var(--muted);letter-spacing:.04em}
+#panel{display:flex;flex-direction:column;gap:22px}
+.brief{display:flex;flex-direction:column;gap:6px}
+.brief .prod{font-size:clamp(2rem,3.6vw,3rem);font-weight:800;line-height:1.3;margin:0}
+.brief .who{font-size:1.2rem}
+.brief .who b{color:var(--yellow);font-weight:600}
+.pair{display:flex;flex-direction:column;gap:14px;border-top:1px solid var(--line);padding-top:18px}
+.row2{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;align-items:baseline}
+.dot{width:12px;height:12px;border-radius:50%;display:inline-block;transform:translateY(1px)}
+.dot.a{background:var(--yellow)}.dot.b{background:var(--fg)}
+.row2 .lbl{color:var(--muted);font-size:.95rem}
+.row2 .val{font-size:1.5rem;font-weight:600;grid-column:2;line-height:1.3}
+.row2 .val small{font-size:.75rem;color:var(--muted);font-weight:500;margin-left:6px}
+.row2 .ex{grid-column:2;color:var(--muted);font-size:.92rem}
+.q{font-size:1.25rem;font-weight:600;line-height:1.45;margin:0;text-wrap:balance}
+.q em{font-style:normal;color:var(--yellow)}
+.empty{color:var(--muted);font-size:1.1rem;margin:0}
+.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.cta{background:var(--yellow);color:var(--ink);border:none;border-radius:999px;padding:13px 28px;font-size:1.1rem;font-weight:600}
+.cta:hover{filter:brightness(1.06)}
+.ghost{background:none;border:1px solid var(--line);border-radius:999px;padding:11px 18px;font-size:1rem}
+.ghost:hover{border-color:var(--muted)}
+.ghost[aria-pressed="true"]{border-color:var(--yellow);color:var(--yellow)}
+.hint{border-left:3px solid var(--yellow);padding:4px 0 4px 14px;display:flex;flex-direction:column;gap:10px}
+.hint p{margin:0;line-height:1.5}
+.hint b{color:var(--yellow);font-weight:600}
+.link{background:none;border:none;color:var(--muted);text-decoration:underline;padding:0;font-size:.9rem;align-self:flex-start}
+.link:hover{color:var(--fg)}
+
+/* examples */
+#examples{display:flex;flex-direction:column;gap:20px}
+.bchips{display:flex;flex-wrap:wrap;gap:6px}
+.bchip{background:none;border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:.95rem}
+.bchip[aria-pressed="true"]{background:var(--fg);color:var(--ink);border-color:var(--fg);font-weight:600}
+.ex-body{display:flex;gap:40px;align-items:center;flex-wrap:wrap}
+.mini{width:min(52vh,40vw,480px);aspect-ratio:1;flex:none;max-width:100%}
+@media (max-width:760px){.mini{width:min(340px,100%)}}
+.mini svg{width:100%;height:100%;display:block}
+.ex-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:14px;max-width:640px}
+.ex-brand{font-size:clamp(2rem,4vw,3.2rem);font-weight:800;font-style:italic;margin:0;line-height:1.05}
+.ex-t{font-size:clamp(1.3rem,2.2vw,1.8rem);font-weight:600;line-height:1.4;margin:0;text-wrap:balance}
+.ex-t em{font-style:normal;color:var(--yellow)}
+.ex-kv{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;margin:0}
+.ex-kv dt{color:var(--muted)}
+.ex-kv dd{margin:0}
+.foot{color:var(--muted);font-size:.85rem;margin:0}
+
+/* dialogs */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);display:grid;place-items:center;z-index:20;padding:20px}
+.dlg{background:var(--panel);border-radius:20px;padding:26px;width:min(720px,100%);max-height:90vh;overflow:auto;display:flex;flex-direction:column;gap:18px}
+.dlg h2{margin:0;font-size:1.3rem}
+.dlg label{display:flex;flex-direction:column;gap:6px;color:var(--muted);font-size:.9rem}
+.dlg textarea,.dlg input{background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-family:inherit;font-size:.95rem;line-height:1.5}
+.dlg textarea{min-height:280px;resize:vertical}
+.pick-grid{display:flex;flex-wrap:wrap;gap:14px;justify-content:center}
+.ptile{width:110px;height:110px;border-radius:20px;border:2px solid var(--line);display:grid;place-items:center;font-size:2.8rem;font-weight:800;transition:transform .12s,background .12s}
+.ptile.lit,.ptile.win{background:var(--yellow);border-color:var(--yellow);color:var(--ink)}
+.ptile.win{transform:scale(1.12)}
+.ptile.used{opacity:.25}
+.pick-grid.many .ptile{width:64px;height:64px;font-size:1.6rem;border-radius:14px}
+.pick-msg{text-align:center;font-size:1.5rem;font-weight:600;margin:0;min-height:2.1rem}
+.pick-msg em{font-style:normal;color:var(--yellow)}
+.chk{flex-direction:row!important;align-items:center;gap:8px!important}
+.chk input{width:18px;height:18px;accent-color:var(--yellow)}
+@media (prefers-reduced-motion:reduce){.seg,.ptile{transition:none}}
+</style>
+<link rel="stylesheet" href="live.css">
+</head><body>
+
+<header class="bar">
+  <div class="logo">TENSION <span>LAB</span></div>
+  <nav class="tabs" role="tablist" aria-label="เมนู">
+    <button class="tab" role="tab" id="tab-play" aria-selected="true" data-v="play">เล่นเกม</button>
+    <button class="tab" role="tab" id="tab-examples" aria-selected="false" data-v="examples">ตัวอย่างแบรนด์</button>
+    <button class="tab" role="tab" id="tab-live" aria-selected="false" data-v="live">เล่นผ่านมือถือ</button>
+  </nav>
+  <div class="tools">
+    <div class="timer" id="timer" aria-label="ตัวจับเวลา">
+      <output id="t-out">05:00</output>
+      <button class="tb" id="t-2" aria-pressed="false">2 นาที</button>
+      <button class="tb" id="t-5" aria-pressed="true">5 นาที</button>
+      <button class="tb" id="t-play" aria-label="เริ่มหรือหยุดเวลา">▶</button>
+      <button class="tb" id="t-reset" aria-label="เริ่มเวลาใหม่">↺</button>
+    </div>
+    <button class="pill" id="open-pick">สุ่มคนเล่า</button>
+    <button class="pill" id="open-set">ตั้งค่า</button>
+  </div>
+</header>
+
+<main>
+  <section class="view" id="play" aria-labelledby="tab-play">
+    <div class="wheel-wrap"><svg id="wheel" viewBox="0 0 600 600" role="img" aria-label="วงล้อคุณค่าพื้นฐาน 10 กลุ่ม"></svg></div>
+    <div class="side-col">
+      
+      <div id="panel" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section class="view" id="examples" aria-labelledby="tab-examples" hidden>
+    <div class="bchips" id="bchips"></div>
+    <div class="ex-body">
+      <div class="mini"><svg id="mini" viewBox="0 0 600 600" role="img" aria-label="วงล้อแสดงคู่คุณค่าของแบรนด์ที่เลือก"></svg></div>
+      <div class="ex-info" id="ex-info"></div>
+    </div>
+    <p class="foot">ตัวอย่างเป็นการตีความเพื่อการเรียนรู้ ไม่ใช่ข้อมูลจากแบรนด์</p>
+  </section>
+
+  <section class="view" id="live" aria-labelledby="tab-live" hidden></section>
+</main>
+
+<div class="overlay" id="pick-dlg" hidden>
+  <div class="dlg" role="dialog" aria-modal="true" aria-labelledby="pick-h">
+    <h2 id="pick-h">สุ่มคนหรือกลุ่มที่จะออกมาเล่า</h2>
+    <p class="pick-msg" id="pick-msg">พร้อมแล้วกดสุ่ม</p>
+    <div class="pick-grid" id="pick-grid"></div>
+    <div class="actions">
+      <button class="cta" id="pick-go">สุ่ม</button>
+      <button class="ghost" id="pick-reset">เริ่มใหม่</button>
+      <label class="chk"><input type="checkbox" id="no-repeat" checked> ไม่ซ้ำหมายเลขเดิม</label>
+      <button class="ghost" id="pick-close" style="margin-left:auto">ปิด</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="set-dlg" hidden>
+  <div class="dlg" role="dialog" aria-modal="true" aria-labelledby="set-h">
+    <h2 id="set-h">ตั้งค่า</h2>
+    <label for="pair-list">โจทย์ บรรทัดละ 1 ข้อ ในรูปแบบ “สินค้า | กลุ่มเป้าหมาย”<textarea id="pair-list"></textarea></label>
+    <label for="n-tables" style="max-width:260px">จำนวนคนหรือกลุ่ม (ใช้ตอนสุ่มคนเล่า)<input type="number" id="n-tables" min="2" max="40"></label>
+    <div class="actions">
+      <button class="cta" id="set-save">บันทึก</button>
+      <button class="ghost" id="set-default">ใช้ค่าเริ่มต้น</button>
+      <button class="ghost" id="set-close" style="margin-left:auto">ปิด</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="data.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const KEY="tensionlab.ext1";
+let cfg=(()=>{try{const s=JSON.parse(localStorage.getItem(KEY)||"null");if(s&&Array.isArray(s.pairs))return s}catch(e){}return JSON.parse(JSON.stringify(DEF))})();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(cfg))}catch(e){}};
+const parsePair=s=>{const [p,w]=s.split("|").map(x=>x.trim());return{p,w:w||"กลุ่มเป้าหมาย"}};
+
+/* views */
+function showTab(v){document.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-selected",x.dataset.v===v));
+  ["play","examples","live"].forEach(k=>$(k).hidden=k!==v);if(v==="examples")renderEx();if(v==="live"&&typeof renderLive==="function")renderLive();if(v==="play")render()}
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>showTab(t.dataset.v));
+
+/* state */
+let cur=1,pool=[];const draws={};
+const D=t=>draws[t]||(draws[t]={});
+function take(prev){if(!pool.length)pool=shuf(cfg.pairs.map(parsePair));let x=pool.pop();if(prev&&x.p===prev){if(!pool.length)pool=shuf(cfg.pairs.map(parsePair));x=pool.pop()}return x}
+
+/* wheel */
+const C=300,R=272,pt=(r,a)=>{const t=a*Math.PI/180;return[C+r*Math.sin(t),C-r*Math.cos(t)]};
+function buildWheel(){
+  let h=`<defs><filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="0" dy="0" stdDeviation="5" flood-color="#000" flood-opacity=".9"/></filter></defs>`;
+  for(let i=0;i<10;i++){const [x0,y0]=pt(R,i*36-18),[x1,y1]=pt(R,i*36+18),[lx,ly]=pt(200,i*36);
+    h+=`<g id="g${i}"><path class="seg${i%2?" alt":""}" id="seg${i}" d="M${C},${C} L${x0},${y0} A${R},${R} 0 0 1 ${x1},${y1} Z"/><text text-anchor="middle" x="${lx}" y="${ly-4}" class="lab-en">${V[i].en}</text><text text-anchor="middle" x="${lx}" y="${ly+16}" class="lab-th">${V[i].ws||V[i].th}</text></g>`}
+  h+=`<circle class="ring" cx="${C}" cy="${C}" r="${R}"/>`;
+  for(let i=0;i<10;i++){const [bx,by]=pt(R,i*36);h+=`<g class="badge"><circle cx="${bx}" cy="${by}" r="18"/><text x="${bx}" y="${by+6}" text-anchor="middle">${i+1}</text></g>`}
+  const head=(y1,y2,c)=>`<polygon points="${C},${y1} ${C-24},${y2} ${C+24},${y2}" fill="#121210" stroke="#121210" stroke-width="12" stroke-linejoin="round"/><polygon points="${C},${y1} ${C-24},${y2} ${C+24},${y2}" fill="${c}" stroke="#121210" stroke-width="3" stroke-linejoin="round"/>`;
+  h+=`<g id="needle" filter="url(#glow)"><line x1="${C}" y1="${C-128}" x2="${C}" y2="${C+128}" stroke="#121210" stroke-width="17" stroke-linecap="round"/><line x1="${C}" y1="${C-124}" x2="${C}" y2="${C}" stroke="#ffe500" stroke-width="9"/><line x1="${C}" y1="${C}" x2="${C}" y2="${C+124}" stroke="#f6f4ec" stroke-width="9"/>${head(C-162,C-118,"#ffe500")}${head(C+162,C+118,"#f6f4ec")}</g>`;
+  h+=`<g class="hub" id="hub" role="button" tabindex="0" aria-label="หมุนหรือหยุดวงล้อ"><circle cx="${C}" cy="${C}" r="66"/><text id="hub-t" x="${C}" y="${C+8}" text-anchor="middle">หมุน</text></g>`;
+  $("wheel").innerHTML=h;
+  $("hub").onclick=toggleSpin;$("hub").onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();toggleSpin()}};
+}
+let rot=0,speed=0,state="idle",last=0,tau=450,shown=-1,glideTo=0,prevPair=null;
+function mark(a){document.querySelectorAll("#wheel g[id^=g]").forEach(g=>g.classList.remove("hit"));document.querySelectorAll("#wheel .seg").forEach(s=>s.classList.remove("hit-a","hit-b"));
+  if(a==null)return;const b=opp(a);$("seg"+a).classList.add("hit-a");$("seg"+b).classList.add("hit-b");$("g"+a).classList.add("hit");$("g"+b).classList.add("hit")}
+const idxAt=r=>Math.round((((r%360)+360)%360)/36)%10;
+const setNeedle=()=>$("needle").setAttribute("transform",`rotate(${rot} ${C} ${C})`);
+function frame(ts){
+  const dt=Math.min(50,ts-last);last=ts;
+  if(state==="stopping"){speed*=Math.exp(-dt/tau);if(speed<0.004)speed=0}
+  if(state==="glide"){const d=glideTo-rot;rot+=d*Math.min(1,dt/150);if(Math.abs(d)<0.4){rot=glideTo;speed=0}else speed=1}else rot+=speed*dt;
+  setNeedle();const i=idxAt(rot);if(i!==shown){shown=i;mark(i)}
+  if(speed===0){
+    if(state==="stopping"&&prevPair!=null&&pairOf(i)===prevPair){glideTo=rot+(Math.random()<.5?36:-36);state="glide";speed=1;requestAnimationFrame(frame);return}
+    state="idle";$("hub-t").textContent="หมุน";land(i);return}
+  requestAnimationFrame(frame);
+}
+function toggleSpin(){
+  const d=draws[cur];if(!d||!d.p){draw();return}
+  if(state==="idle"){prevPair=d.a!=null?pairOf(d.a):null;state="running";speed=0.42;$("hub-t").textContent="หยุด";d.hint=false;render();last=performance.now();requestAnimationFrame(frame)}
+  else if(state==="running"){state="stopping";tau=380+Math.random()*260;$("hub-t").textContent="…";render()}
+}
+function land(i){const d=D(cur);d.a=i;d.mech=null;render()}
+
+/* play panel */
+function draw(){const d=D(cur);const x=take(d.p);d.p=x.p;d.w=x.w;d.a=null;d.hint=false;mark(null);render()}
+function newMech(d){const o=d.mech||[];d.mech=shuf(MECH.map((_,i)=>i).filter(i=>!o.includes(i))).slice(0,2)}
+function render(){
+  renderTables();
+  const d=draws[cur]||{};
+  let h="";
+  if(!d.p){
+    h=`<p class="q">เริ่มจากจั่วโจทย์ <em>สินค้า + กลุ่มเป้าหมาย</em></p>${typeof liveOn==="function"&&liveOn()?`<p class="empty">ห้องมือถือเปิดอยู่ (รหัส ${L.code}) หมุนเสร็จแล้วกด “ส่งเข้ามือถือ”</p>`:""}
+    <div class="actions"><button class="cta" id="main">จั่วโจทย์</button></div>`;
+  }else{
+    h=`<div class="brief"><span class="k">โจทย์</span><div class="prod">${esc(d.p)}</div><div class="who">สำหรับ <b>${esc(d.w)}</b></div></div>`;
+    if(state!=="idle"){
+      h+=`<div class="pair"><p class="q">${state==="running"?"พร้อมแล้วตะโกน <em>“หยุด!”</em>":"กำลังชะลอ…"}</p></div>
+      <div class="actions"><button class="cta" id="main" ${state==="stopping"?"disabled":""}>หยุด</button></div>`;
+    }else if(d.a==null){
+      h+=`<div class="pair"><p class="empty">หมุนวงล้อเพื่อหาว่า กลุ่มนี้ <b>ให้คุณค่ากับ</b> อะไร แต่ก็ <b>ติดที่</b> อะไร</p></div>
+      <div class="actions"><button class="cta" id="main">หมุนวงล้อ</button><button class="ghost" id="redraw">จั่วโจทย์ใหม่</button></div>`;
+    }else{
+      const A=V[d.a],B=V[opp(d.a)];if(!d.mech)newMech(d);
+      h+=`<div class="pair">
+        <div class="row2"><span class="dot a"></span><span class="lbl">ให้คุณค่ากับ</span><span class="val">${A.vn}<small>${A.en}</small></span><span class="ex">เช่น ${A.W.slice(0,3).map(esc).join(" · ")}</span></div>
+        <div class="row2"><span class="dot b"></span><span class="lbl">แต่ก็ติดที่</span><span class="val">${B.pull}<small>${B.en}</small></span><span class="ex">เช่น ${B.P.slice(0,3).map(esc).join(" · ")}</span></div>
+      </div>
+      <p class="q"><em>${esc(d.p)}</em> ควรสื่อสารในแง่ไหน เพื่อช่วย<em>${esc(d.w)}</em>ที่ลังเลนี้?</p>
+      ${d.hint?`<div class="hint">
+        <p><b>เริ่มจาก</b> ควรพูดอะไรให้${esc(d.w)}รู้สึกว่าได้${A.vn} โดยไม่ต้องติดกับ${B.pull}?</p>
+        ${d.mech.map(k=>`<p><b>${MECH[k].t}</b> · ${MECH[k].q}</p>`).join("")}
+        <button class="link" id="re-hint">ขอมุมอื่น</button></div>`:""}
+      <div class="actions">${typeof liveOn==="function"&&liveOn()?`<button class="cta" id="live-send">ส่งเข้ามือถือให้ทุกคนตอบ</button>`:`<button class="cta" id="timer-go">เริ่มคิด 5 นาที</button>`}<button class="ghost" id="hint-btn" aria-pressed="${!!d.hint}">ไอเดียตั้งต้น</button><button class="ghost" id="swap">สลับ</button><button class="ghost" id="main">หมุนใหม่</button></div>`;
+    }
+  }
+  $("panel").innerHTML=h;
+  if($("main"))$("main").onclick=()=>{if(!d.p)draw();else toggleSpin()};
+  if($("redraw"))$("redraw").onclick=draw;
+  if($("hint-btn"))$("hint-btn").onclick=()=>{d.hint=!d.hint;render()};
+  if($("re-hint"))$("re-hint").onclick=()=>{newMech(d);render()};
+  if($("swap"))$("swap").onclick=()=>{d.a=opp(d.a);rot+=180;setNeedle();shown=d.a;mark(d.a);render()};
+  if($("timer-go"))$("timer-go").onclick=()=>{setTimer(300);startTimer()};
+  if($("live-send"))$("live-send").onclick=()=>sendCreate(d);
+}
+function renderTables(){}
+
+/* examples */
+let exI=0;
+const KIND={opp:"คู่ตรงข้ามบนวงล้อ",near:"อยู่ใกล้คู่ตรงข้าม",sit:"มาจากสถานการณ์"};
+function miniWheel(a,b){
+  let h="";for(let i=0;i<10;i++){const [x0,y0]=pt(R,i*36-18),[x1,y1]=pt(R,i*36+18),[lx,ly]=pt(190,i*36);const cls=i===a?" hit-a":i===b?" hit-b":(i%2?" alt":"");
+    h+=`<g class="${i===a||i===b?"hit":""}"><path class="seg${cls}" d="M${C},${C} L${x0},${y0} A${R},${R} 0 0 1 ${x1},${y1} Z"/><text text-anchor="middle" x="${lx}" y="${ly+6}" class="lab-en" style="font-size:17px">${V[i].en}</text></g>`}
+  h+=`<circle class="ring" cx="${C}" cy="${C}" r="${R}"/><circle cx="${C}" cy="${C}" r="60" fill="#0f0f0d" stroke="#ffe500" stroke-width="4"/><text x="${C}" y="${C+8}" text-anchor="middle" fill="#f6f4ec" font-weight="800" font-size="${EX[exI].b.length>7?19:24}">${esc(EX[exI].b)}</text>`;return h}
+function renderEx(){
+  $("bchips").innerHTML=EX.map((e,i)=>`<button class="bchip" aria-pressed="${i===exI}" data-i="${i}">${esc(e.b)}</button>`).join("");
+  $("bchips").querySelectorAll(".bchip").forEach(x=>x.onclick=()=>{exI=+x.dataset.i;renderEx()});
+  const e=EX[exI];$("mini").innerHTML=miniWheel(e.v,opp(e.v));
+  $("ex-info").innerHTML=`<h2 class="ex-brand">${esc(e.b)}</h2><p class="ex-t">${esc(e.who)} ให้คุณค่ากับ<em>${esc(e.a)}</em><br><span style="white-space:nowrap">แต่ก็ติดที่</span><em>${esc(e.x)}</em></p>
+  <dl class="ex-kv"><dt>แบรนด์ช่วยยังไง</dt><dd>${e.role}</dd><dt>สิ่งที่แบรนด์ทำ</dt><dd>${e.proof}</dd><dt>บนวงล้อ</dt><dd><span class="dot a"></span> ${V[e.v].th} (${V[e.v].en}) ↔ <span class="dot b"></span> ${V[opp(e.v)].th} (${V[opp(e.v)].en})</dd></dl>`;
+}
+
+/* timer */
+let tLeft=300,tSet=300,tInt=null,actx=null;
+const fmt=s=>String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");
+function paint(){$("t-out").textContent=fmt(tLeft);$("t-play").textContent=tInt?"❚❚":"▶";$("t-2").setAttribute("aria-pressed",tSet===120);$("t-5").setAttribute("aria-pressed",tSet===300)}
+function setTimer(s){stopTimer();tSet=tLeft=s;$("timer").classList.remove("done");paint()}
+function startTimer(){if(tInt||tLeft<=0)return;try{actx=actx||new (window.AudioContext||window.webkitAudioContext)()}catch(e){}
+  $("timer").classList.remove("done");tInt=setInterval(()=>{tLeft--;if(tLeft<=0){tLeft=0;stopTimer();$("timer").classList.add("done");beep()}paint()},1000);paint()}
+function stopTimer(){clearInterval(tInt);tInt=null;paint()}
+function beep(){if(!actx)return;try{[0,.35,.7].forEach(t=>{const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=880;o.connect(g);g.connect(actx.destination);g.gain.setValueAtTime(.25,actx.currentTime+t);g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+t+.3);o.start(actx.currentTime+t);o.stop(actx.currentTime+t+.3)})}catch(e){}}
+$("t-2").onclick=()=>setTimer(120);$("t-5").onclick=()=>setTimer(300);$("t-play").onclick=()=>tInt?stopTimer():startTimer();$("t-reset").onclick=()=>setTimer(tSet);
+
+/* pick table */
+const used=new Set();let picking=false;
+function renderPick(win){let h="";for(let t=1;t<=cfg.tables;t++)h+=`<div class="ptile${used.has(t)&&t!==win?" used":""}${t===win?" win":""}" id="pt${t}">${t}</div>`;$("pick-grid").innerHTML=h;$("pick-grid").classList.toggle("many",cfg.tables>12)}
+function pick(){if(picking)return;const cand=[];for(let t=1;t<=cfg.tables;t++)if(!($("no-repeat").checked&&used.has(t)))cand.push(t);
+  if(!cand.length){$("pick-msg").innerHTML="ครบทุกหมายเลขแล้ว กด <em>เริ่มใหม่</em>";return}
+  picking=true;renderPick();const win=cand[Math.floor(Math.random()*cand.length)];
+  const done=()=>{used.add(win);renderPick(win);$("pick-msg").innerHTML=`<em>หมายเลข ${win}</em> ออกมาเล่า`;picking=false};
+  if(reduce)return done();const steps=20+Math.floor(Math.random()*cand.length);let i=0,idx=0;$("pick-msg").textContent="กำลังสุ่ม…";
+  const tick=()=>{document.querySelectorAll(".ptile").forEach(p=>p.classList.remove("lit"));if(i>=steps)return done();idx=(idx+1)%cand.length;$("pt"+cand[idx]).classList.add("lit");i++;setTimeout(tick,40+Math.pow(i/steps,3)*380)};tick()}
+$("open-pick").onclick=()=>{renderPick();$("pick-dlg").hidden=false};
+$("pick-close").onclick=()=>$("pick-dlg").hidden=true;$("pick-go").onclick=pick;
+$("pick-reset").onclick=()=>{used.clear();renderPick();$("pick-msg").textContent="พร้อมแล้วกดสุ่ม"};
+
+/* settings */
+$("open-set").onclick=()=>{$("pair-list").value=cfg.pairs.join("\n");$("n-tables").value=cfg.tables;$("set-dlg").hidden=false};
+$("set-close").onclick=()=>$("set-dlg").hidden=true;
+$("set-default").onclick=()=>{$("pair-list").value=DEF.pairs.join("\n");$("n-tables").value=DEF.tables};
+$("set-save").onclick=()=>{const L=$("pair-list").value.split("\n").map(s=>s.trim()).filter(Boolean);if(L.length)cfg.pairs=L;
+  cfg.tables=Math.max(2,Math.min(40,parseInt($("n-tables").value)||5));save();pool=[];if(cur>cfg.tables)cur=1;used.clear();render();$("set-dlg").hidden=true};
+document.querySelectorAll(".overlay").forEach(o=>o.onclick=e=>{if(e.target===o)o.hidden=true});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")document.querySelectorAll(".overlay").forEach(o=>o.hidden=true)});
+
+buildWheel();setNeedle();render();paint();
+</script>
+<script src="live.js"></script>
+<script>render();if(typeof L!=="undefined"&&L&&L.code)showTab("live");</script>
+</body></html>
