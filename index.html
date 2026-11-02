@@ -131,12 +131,82 @@ main{flex:1;min-height:0;display:flex}
 .chk{flex-direction:row!important;align-items:center;gap:8px!important}
 .chk input{width:18px;height:18px;accent-color:var(--yellow)}
 @media (prefers-reduced-motion:reduce){.seg,.ptile{transition:none}}
+
+/* header wrappers only take effect on phones; desktop keeps tabs and tools inline */
+.menu,.menu-in{display:contents}
+.menu-head,#menu-btn,#t-mini,.grab{display:none}
+.mini .lab-en{font-size:17px}
+@media (pointer:coarse),(max-width:1023px){
+  .tab,.tb,.pill,.tchip,.bchip,.ghost,.cta,.chk{min-height:44px}
+  .tb{min-width:44px}
+  .link{min-height:44px;display:inline-flex;align-items:center}
+}
+/* phone, either way up: tabs and tools live in a sheet, dialogs rise from the bottom */
+@media (max-width:767px),(max-height:500px){
+  html,body{height:auto;min-height:100%}
+  body{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:8px 16px;gap:8px}
+  .bar{flex-wrap:nowrap;gap:8px}
+  .logo{margin-right:auto}
+  #menu-btn,#t-mini{display:flex;align-items:center;justify-content:center;min-height:44px}
+  #menu-btn{width:44px;padding:0}
+  #t-mini{font-weight:600;font-variant-numeric:tabular-nums}
+  #t-mini.done{color:var(--yellow)}
+  .menu{display:none;position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.75);align-items:flex-end}
+  .menu.open{display:flex}
+  .menu-in{display:flex;flex-direction:column;gap:16px;width:100%;max-height:90vh;max-height:90dvh;overflow-y:auto;background:var(--panel);border-radius:20px 20px 0 0;padding:16px 16px max(16px,env(safe-area-inset-bottom,0px))}
+  .menu-head{display:flex;align-items:center;justify-content:space-between}
+  .menu-head h2{margin:0;font-size:1.3rem}
+  .tabs{flex-direction:column;margin:0}
+  .tab{text-align:left;border-radius:12px;padding:12px 16px}
+  .tools{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .timer{grid-column:1/-1;justify-content:space-between}
+  .timer output{margin-right:auto}
+  .overlay{place-items:end stretch;padding:0}
+  .dlg{width:100%;max-height:90vh;max-height:90dvh;border-radius:20px 20px 0 0;padding:16px 16px max(16px,env(safe-area-inset-bottom,0px))}
+  .dlg textarea{min-height:160px}
+  .dlg textarea,.dlg input{font-size:1rem}
+  .ptile{width:72px;height:72px;font-size:2rem}
+  #wheel .lab-en{display:none}
+  #wheel .lab-th{font-size:22px;font-weight:500;transform:translateY(-10px)}
+  .mini .lab-en{font-size:22px}
+  /* long labels pass their wedge at this size; a halo keeps them readable on any neighbour */
+  #wheel .lab-th,.mini .lab-en{paint-order:stroke;stroke:var(--panel);stroke-width:6px;stroke-linejoin:round}
+  #wheel .hit.a .lab-th,.mini .hit.a .lab-en{stroke:var(--yellow)}
+  #wheel .hit.b .lab-th,.mini .hit.b .lab-en{stroke:var(--fg)}
+}
+/* phone upright: wheel fills the screen, the brief and result sit in a sheet over it */
+@media (max-width:767px) and (orientation:portrait){
+  #play{display:block}
+  .wheel-wrap{width:min(100%,calc(100vh - 300px));width:min(100%,calc(100dvh - 300px));margin:clamp(0px,calc((100dvh - 100vw - 300px)/2),40px) auto 0}
+  .side-col{position:fixed;left:0;right:0;bottom:0;z-index:10;gap:0;max-width:none;max-height:64vh;max-height:64dvh;background:var(--panel);border-top:1px solid var(--line);border-radius:20px 20px 0 0;padding:12px 16px max(16px,env(safe-area-inset-bottom,0px))}
+  #panel{gap:12px;min-height:0;overflow-y:auto}
+  #panel>.actions{position:sticky;bottom:0;background:var(--panel);padding-top:8px}
+  #panel .cta,#panel .ghost{flex:1 1 auto}
+  .brief .prod{font-size:1.75rem}
+  .side-col:not(.min) #panel:has(.row2) .prod{font-size:1.25rem}
+  .row2 .val{font-size:1.25rem}
+  .pair:has(>.empty){display:none}
+  .grab{display:flex;flex-direction:column;align-items:center;gap:4px;flex:none;min-height:44px;background:none;border:none;padding:0 0 8px;color:var(--muted);font-size:.85rem}
+  .grab i{width:40px;height:4px;border-radius:4px;background:var(--line)}
+  .side-col.min #panel>:not(.brief){display:none}
+}
+@media (max-width:767px) and (orientation:portrait) and (max-height:640px){
+  .side-col{max-height:80vh;max-height:80dvh}
+}
+@media (max-height:500px) and (orientation:landscape){
+  #play{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+  .wheel-wrap{width:min(100%,calc(100vh - 76px));width:min(100%,calc(100dvh - 76px))}
+}
 </style>
 <link rel="stylesheet" href="live.css">
 </head><body>
 
 <header class="bar">
   <div class="logo">TENSION <span>LAB</span></div>
+  <button class="pill" id="t-mini" aria-label="ตัวจับเวลา เปิดเมนู" hidden></button>
+  <button class="pill" id="menu-btn" aria-label="เปิดเมนู" aria-expanded="false" aria-controls="menu"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14"/></svg></button>
+  <div class="menu" id="menu"><div class="menu-in">
+  <div class="menu-head"><h2>เมนู</h2><button class="pill" id="menu-close">ปิด</button></div>
   <nav class="tabs" role="tablist" aria-label="เมนู">
     <button class="tab" role="tab" id="tab-play" aria-selected="true" data-v="play">เล่นเกม</button>
     <button class="tab" role="tab" id="tab-examples" aria-selected="false" data-v="examples">ตัวอย่างแบรนด์</button>
@@ -153,13 +223,14 @@ main{flex:1;min-height:0;display:flex}
     <button class="pill" id="open-pick">สุ่มคนเล่า</button>
     <button class="pill" id="open-set">ตั้งค่า</button>
   </div>
+  </div></div>
 </header>
 
 <main>
   <section class="view" id="play" aria-labelledby="tab-play">
     <div class="wheel-wrap"><svg id="wheel" viewBox="0 0 600 600" role="img" aria-label="วงล้อคุณค่าพื้นฐาน 10 กลุ่ม"></svg></div>
-    <div class="side-col">
-      
+    <div class="side-col" id="side">
+      <button class="grab" id="grab" aria-controls="panel" hidden><i></i><span id="grab-t"></span></button>
       <div id="panel" aria-live="polite"></div>
     </div>
   </section>
@@ -216,8 +287,12 @@ const parsePair=s=>{const [p,w]=s.split("|").map(x=>x.trim());return{p,w:w||"ก
 
 /* views */
 function showTab(v){document.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-selected",x.dataset.v===v));
-  ["play","examples","live"].forEach(k=>$(k).hidden=k!==v);if(v==="examples")renderEx();if(v==="live"&&typeof renderLive==="function")renderLive();if(v==="play")render()}
+  ["play","examples","live"].forEach(k=>$(k).hidden=k!==v);if(v==="examples")renderEx();if(v==="live"&&typeof renderLive==="function")renderLive();if(v==="play")render();closeMenu()}
 document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>showTab(t.dataset.v));
+function openMenu(){$("menu").classList.add("open");$("menu-btn").setAttribute("aria-expanded",true);$("menu-close").focus()}
+function closeMenu(){if(!$("menu").classList.contains("open"))return;$("menu").classList.remove("open");$("menu-btn").setAttribute("aria-expanded",false);$("menu-btn").focus()}
+$("menu-btn").onclick=openMenu;$("t-mini").onclick=openMenu;$("menu-close").onclick=closeMenu;
+$("menu").onclick=e=>{if(e.target===e.currentTarget)closeMenu()};
 
 /* state */
 let cur=1,pool=[];const draws={};
@@ -228,8 +303,8 @@ function take(prev){if(!pool.length)pool=shuf(cfg.pairs.map(parsePair));let x=po
 const C=300,R=272,pt=(r,a)=>{const t=a*Math.PI/180;return[C+r*Math.sin(t),C-r*Math.cos(t)]};
 function buildWheel(){
   let h=`<defs><filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="0" dy="0" stdDeviation="5" flood-color="#000" flood-opacity=".9"/></filter></defs>`;
-  for(let i=0;i<10;i++){const [x0,y0]=pt(R,i*36-18),[x1,y1]=pt(R,i*36+18),[lx,ly]=pt(200,i*36);
-    h+=`<g id="g${i}"><path class="seg${i%2?" alt":""}" id="seg${i}" d="M${C},${C} L${x0},${y0} A${R},${R} 0 0 1 ${x1},${y1} Z"/><text text-anchor="middle" x="${lx}" y="${ly-4}" class="lab-en">${V[i].en}</text><text text-anchor="middle" x="${lx}" y="${ly+16}" class="lab-th">${V[i].ws||V[i].th}</text></g>`}
+  for(let i=0;i<10;i++){const [x0,y0]=pt(R,i*36-18),[x1,y1]=pt(R,i*36+18);h+=`<path class="seg${i%2?" alt":""}" id="seg${i}" d="M${C},${C} L${x0},${y0} A${R},${R} 0 0 1 ${x1},${y1} Z"/>`}
+  for(let i=0;i<10;i++){const [lx,ly]=pt(200,i*36);h+=`<g id="g${i}"><text text-anchor="middle" x="${lx}" y="${ly-4}" class="lab-en">${V[i].en}</text><text text-anchor="middle" x="${lx}" y="${ly+16}" class="lab-th">${V[i].ws||V[i].th}</text></g>`}
   h+=`<circle class="ring" cx="${C}" cy="${C}" r="${R}"/>`;
   for(let i=0;i<10;i++){const [bx,by]=pt(R,i*36);h+=`<g class="badge"><circle cx="${bx}" cy="${by}" r="18"/><text x="${bx}" y="${by+6}" text-anchor="middle">${i+1}</text></g>`}
   const head=(y1,y2,c)=>`<polygon points="${C},${y1} ${C-24},${y2} ${C+24},${y2}" fill="#121210" stroke="#121210" stroke-width="12" stroke-linejoin="round"/><polygon points="${C},${y1} ${C-24},${y2} ${C+24},${y2}" fill="${c}" stroke="#121210" stroke-width="3" stroke-linejoin="round"/>`;
@@ -239,8 +314,8 @@ function buildWheel(){
   $("hub").onclick=toggleSpin;$("hub").onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();toggleSpin()}};
 }
 let rot=0,speed=0,state="idle",last=0,tau=450,shown=-1,glideTo=0,prevPair=null;
-function mark(a){document.querySelectorAll("#wheel g[id^=g]").forEach(g=>g.classList.remove("hit"));document.querySelectorAll("#wheel .seg").forEach(s=>s.classList.remove("hit-a","hit-b"));
-  if(a==null)return;const b=opp(a);$("seg"+a).classList.add("hit-a");$("seg"+b).classList.add("hit-b");$("g"+a).classList.add("hit");$("g"+b).classList.add("hit")}
+function mark(a){document.querySelectorAll("#wheel g[id^=g]").forEach(g=>g.classList.remove("hit","a","b"));document.querySelectorAll("#wheel .seg").forEach(s=>s.classList.remove("hit-a","hit-b"));
+  if(a==null)return;const b=opp(a);$("seg"+a).classList.add("hit-a");$("seg"+b).classList.add("hit-b");$("g"+a).classList.add("hit","a");$("g"+b).classList.add("hit","b")}
 const idxAt=r=>Math.round((((r%360)+360)%360)/36)%10;
 const setNeedle=()=>$("needle").setAttribute("transform",`rotate(${rot} ${C} ${C})`);
 function frame(ts){
@@ -258,7 +333,9 @@ function toggleSpin(){
   if(state==="idle"){prevPair=d.a!=null?pairOf(d.a):null;state="running";speed=0.42;$("hub-t").textContent="หยุด";d.hint=false;render();last=performance.now();requestAnimationFrame(frame)}
   else if(state==="running"){state="stopping";tau=380+Math.random()*260;$("hub-t").textContent="…";render()}
 }
-function land(i){const d=D(cur);d.a=i;d.mech=null;render()}
+function land(i){const d=D(cur);d.a=i;d.mech=null;$("side").classList.remove("min");render();
+  if(!reduce&&matchMedia("(max-width:767px) and (orientation:portrait)").matches)$("side").animate([{transform:"translateY(30%)"},{transform:"none"}],{duration:260,easing:"ease-out"})}
+$("grab").onclick=()=>{$("side").classList.toggle("min");render()};
 
 /* play panel */
 function draw(){const d=D(cur);const x=take(d.p);d.p=x.p;d.w=x.w;d.a=null;d.hint=false;mark(null);render()}
@@ -293,6 +370,8 @@ function render(){
     }
   }
   $("panel").innerHTML=h;
+  const hasResult=state==="idle"&&d.a!=null;if(!hasResult)$("side").classList.remove("min");
+  const min=$("side").classList.contains("min");$("grab").hidden=!hasResult;$("grab").setAttribute("aria-expanded",!min);$("grab-t").textContent=min?"ดูผล ▴":"ดูวงล้อ ▾";
   if($("main"))$("main").onclick=()=>{if(!d.p)draw();else toggleSpin()};
   if($("redraw"))$("redraw").onclick=draw;
   if($("hint-btn"))$("hint-btn").onclick=()=>{d.hint=!d.hint;render()};
@@ -307,8 +386,8 @@ function renderTables(){}
 let exI=0;
 const KIND={opp:"คู่ตรงข้ามบนวงล้อ",near:"อยู่ใกล้คู่ตรงข้าม",sit:"มาจากสถานการณ์"};
 function miniWheel(a,b){
-  let h="";for(let i=0;i<10;i++){const [x0,y0]=pt(R,i*36-18),[x1,y1]=pt(R,i*36+18),[lx,ly]=pt(190,i*36);const cls=i===a?" hit-a":i===b?" hit-b":(i%2?" alt":"");
-    h+=`<g class="${i===a||i===b?"hit":""}"><path class="seg${cls}" d="M${C},${C} L${x0},${y0} A${R},${R} 0 0 1 ${x1},${y1} Z"/><text text-anchor="middle" x="${lx}" y="${ly+6}" class="lab-en" style="font-size:17px">${V[i].en}</text></g>`}
+  let h="";for(let i=0;i<10;i++){const [x0,y0]=pt(R,i*36-18),[x1,y1]=pt(R,i*36+18);const cls=i===a?" hit-a":i===b?" hit-b":(i%2?" alt":"");h+=`<path class="seg${cls}" d="M${C},${C} L${x0},${y0} A${R},${R} 0 0 1 ${x1},${y1} Z"/>`}
+  for(let i=0;i<10;i++){const [lx,ly]=pt(190,i*36);h+=`<g class="${i===a?"hit a":i===b?"hit b":""}"><text text-anchor="middle" x="${lx}" y="${ly+6}" class="lab-en">${V[i].en}</text></g>`}
   h+=`<circle class="ring" cx="${C}" cy="${C}" r="${R}"/><circle cx="${C}" cy="${C}" r="60" fill="#0f0f0d" stroke="#ffe500" stroke-width="4"/><text x="${C}" y="${C+8}" text-anchor="middle" fill="#f6f4ec" font-weight="800" font-size="${EX[exI].b.length>7?19:24}">${esc(EX[exI].b)}</text>`;return h}
 function renderEx(){
   $("bchips").innerHTML=EX.map((e,i)=>`<button class="bchip" aria-pressed="${i===exI}" data-i="${i}">${esc(e.b)}</button>`).join("");
@@ -321,7 +400,8 @@ function renderEx(){
 /* timer */
 let tLeft=300,tSet=300,tInt=null,actx=null;
 const fmt=s=>String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");
-function paint(){$("t-out").textContent=fmt(tLeft);$("t-play").textContent=tInt?"❚❚":"▶";$("t-2").setAttribute("aria-pressed",tSet===120);$("t-5").setAttribute("aria-pressed",tSet===300)}
+function paint(){$("t-out").textContent=fmt(tLeft);$("t-play").textContent=tInt?"❚❚":"▶";$("t-2").setAttribute("aria-pressed",tSet===120);$("t-5").setAttribute("aria-pressed",tSet===300);
+  $("t-mini").textContent=fmt(tLeft);$("t-mini").hidden=!tInt&&tLeft===tSet;$("t-mini").classList.toggle("done",tLeft===0)}
 function setTimer(s){stopTimer();tSet=tLeft=s;$("timer").classList.remove("done");paint()}
 function startTimer(){if(tInt||tLeft<=0)return;try{actx=actx||new (window.AudioContext||window.webkitAudioContext)()}catch(e){}
   $("timer").classList.remove("done");tInt=setInterval(()=>{tLeft--;if(tLeft<=0){tLeft=0;stopTimer();$("timer").classList.add("done");beep()}paint()},1000);paint()}
@@ -338,18 +418,18 @@ function pick(){if(picking)return;const cand=[];for(let t=1;t<=cfg.tables;t++)if
   const done=()=>{used.add(win);renderPick(win);$("pick-msg").innerHTML=`<em>หมายเลข ${win}</em> ออกมาเล่า`;picking=false};
   if(reduce)return done();const steps=20+Math.floor(Math.random()*cand.length);let i=0,idx=0;$("pick-msg").textContent="กำลังสุ่ม…";
   const tick=()=>{document.querySelectorAll(".ptile").forEach(p=>p.classList.remove("lit"));if(i>=steps)return done();idx=(idx+1)%cand.length;$("pt"+cand[idx]).classList.add("lit");i++;setTimeout(tick,40+Math.pow(i/steps,3)*380)};tick()}
-$("open-pick").onclick=()=>{renderPick();$("pick-dlg").hidden=false};
+$("open-pick").onclick=()=>{closeMenu();renderPick();$("pick-dlg").hidden=false};
 $("pick-close").onclick=()=>$("pick-dlg").hidden=true;$("pick-go").onclick=pick;
 $("pick-reset").onclick=()=>{used.clear();renderPick();$("pick-msg").textContent="พร้อมแล้วกดสุ่ม"};
 
 /* settings */
-$("open-set").onclick=()=>{$("pair-list").value=cfg.pairs.join("\n");$("n-tables").value=cfg.tables;$("set-dlg").hidden=false};
+$("open-set").onclick=()=>{closeMenu();$("pair-list").value=cfg.pairs.join("\n");$("n-tables").value=cfg.tables;$("set-dlg").hidden=false};
 $("set-close").onclick=()=>$("set-dlg").hidden=true;
 $("set-default").onclick=()=>{$("pair-list").value=DEF.pairs.join("\n");$("n-tables").value=DEF.tables};
 $("set-save").onclick=()=>{const L=$("pair-list").value.split("\n").map(s=>s.trim()).filter(Boolean);if(L.length)cfg.pairs=L;
   cfg.tables=Math.max(2,Math.min(40,parseInt($("n-tables").value)||5));save();pool=[];if(cur>cfg.tables)cur=1;used.clear();render();$("set-dlg").hidden=true};
 document.querySelectorAll(".overlay").forEach(o=>o.onclick=e=>{if(e.target===o)o.hidden=true});
-document.addEventListener("keydown",e=>{if(e.key==="Escape")document.querySelectorAll(".overlay").forEach(o=>o.hidden=true)});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){document.querySelectorAll(".overlay").forEach(o=>o.hidden=true);closeMenu()}});
 
 buildWheel();setNeedle();render();paint();
 </script>
