@@ -53,3 +53,14 @@ const QFIX=[
  {p:"อย่าถามแค่ว่า “เราจะพูดอะไรดี” ให้ถามว่าอะไร",o:["ทำไมเขาต้องแคร์?","เราจะพูดให้ดังได้ยังไง?","คู่แข่งพูดอะไรอยู่?","ใช้งบเท่าไหร่ถึงจะพอ?"],c:0}
 ];
 function buildQuiz(n){return QFIX.slice(0,n).map(q=>{const o=shuf(q.o);return{p:q.p,o,c:o.indexOf(q.o[q.c])}})}
+
+/* Pyramid game: the 30 B2C Elements of Value (Bain & Company), top tier first. [tier index into EOVL, Thai name, English name] */
+const EOVL=["ผลต่อสังคม","ชีวิตเปลี่ยน","อารมณ์","ใช้งาน"];
+const EOV=[
+ [0,"ช่วยสิ่งที่ใหญ่กว่าตัวเอง","Self-transcendence"],
+ [1,"ให้ความหวัง","Provides hope"],[1,"ได้เป็นตัวเองเต็มที่","Self-actualization"],[1,"ให้แรงผลักดัน","Motivation"],[1,"ส่งต่อให้รุ่นหลัง","Heirloom"],[1,"ได้เป็นส่วนหนึ่ง","Affiliation/belonging"],
+ [2,"ลดความกังวล","Reduces anxiety"],[2,"ให้รางวัลตัวเอง","Rewards me"],[2,"ชวนคิดถึงวันเก่า","Nostalgia"],[2,"ดีไซน์สวย","Design/aesthetics"],[2,"บอกตัวตน","Badge value"],
+ [2,"สุขภาพดี","Wellness"],[2,"ช่วยผ่อนคลาย","Therapeutic value"],[2,"สนุก","Fun/entertainment"],[2,"ทำให้ดูดี","Attractiveness"],[2,"เข้าถึงสิ่งพิเศษ","Provides access"],
+ [3,"ประหยัดเวลา","Saves time"],[3,"ทำให้ง่าย","Simplifies"],[3,"ช่วยหาเงิน","Makes money"],[3,"ลดความเสี่ยง","Reduces risk"],[3,"จัดระเบียบ","Organizes"],[3,"รวมทุกอย่างไว้ที่เดียว","Integrates"],[3,"เชื่อมคนถึงกัน","Connects"],
+ [3,"ไม่ต้องออกแรง","Reduces effort"],[3,"ไม่ยุ่งยาก","Avoids hassles"],[3,"ประหยัดเงิน","Reduces cost"],[3,"คุณภาพดี","Quality"],[3,"มีให้เลือกเยอะ","Variety"],[3,"ถูกใจประสาทสัมผัส","Sensory appeal"],[3,"ให้ข้อมูล","Informs"]
+];

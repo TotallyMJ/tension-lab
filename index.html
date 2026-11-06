@@ -211,6 +211,7 @@ main{flex:1;min-height:0;display:flex}
   <nav class="tabs" role="tablist" aria-label="เมนู">
     <button class="tab" role="tab" id="tab-examples" aria-selected="true" data-v="examples">ตัวอย่างแบรนด์</button>
     <button class="tab" role="tab" id="tab-live" aria-selected="false" data-v="live">Quiz</button>
+    <button class="tab" role="tab" id="tab-pyr" aria-selected="false" data-v="pyr">Pyramid</button>
   </nav>
   <div class="tools">
     <div class="timer" id="timer" aria-label="ตัวจับเวลา">
@@ -286,8 +287,8 @@ const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(cfg))}catch(e){}};
 const parsePair=s=>{const [p,w]=s.split("|").map(x=>x.trim());return{p,w:w||"กลุ่มเป้าหมาย"}};
 
 /* views */
-function showTab(v){document.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-selected",x.dataset.v===v));
-  ["play","examples","live"].forEach(k=>$(k).hidden=k!==v);if(v==="examples")renderEx();if(v==="live"&&typeof renderLive==="function")renderLive();if(v==="play")render();closeMenu()}
+function showTab(v){window.liveTab=v;document.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-selected",x.dataset.v===v));
+  const s=v==="pyr"?"live":v;["play","examples","live"].forEach(k=>$(k).hidden=k!==s);if(v==="examples")renderEx();if(s==="live"&&typeof renderLive==="function")renderLive();if(v==="play")render();closeMenu()}
 document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>showTab(t.dataset.v));
 function openMenu(){$("menu").classList.add("open");$("menu-btn").setAttribute("aria-expanded",true);$("menu-close").focus()}
 function closeMenu(){if(!$("menu").classList.contains("open"))return;$("menu").classList.remove("open");$("menu-btn").setAttribute("aria-expanded",false);$("menu-btn").focus()}
@@ -434,5 +435,5 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"){document.querySelec
 buildWheel();setNeedle();render();paint();
 </script>
 <script src="live.js"></script>
-<script>render();showTab(typeof L!=="undefined"&&L&&L.code?"live":"examples");</script>
+<script>render();showTab(typeof L!=="undefined"&&L&&L.code?(L.mode==="pyr"?"pyr":"live"):"examples");</script>
 </body></html>
