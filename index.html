@@ -6,11 +6,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,400;0,500;0,600;0,800;1,800&display=swap">
 <style>
-/* Layout: one play screen — wheel left, prompt + result right. Single dark look. */
+/* Cloud white theme: yellow is a fill behind dark text, never text on white (use --accent-t for gold text). */
 :root{
-  --bg:#0f0f0d; --panel:#191917; --line:#2c2b26; --fg:#f6f4ec; --muted:#9d9a8d; --yellow:#ffe500; --ink:#121210;
+  --bg:#f2f2ef; --panel:#ffffff; --line:#e2e2de; --fg:#1c1d1f; --muted:#5d5f63; --yellow:#ffe500; --ink:#121210;
+  --accent-t:#7d6000; --ok:#1f7a3d; --bad:#c2331f;
   --font:"Prompt","Noto Sans Thai","Leelawadee UI",Tahoma,sans-serif;
-  color-scheme:dark;
+  color-scheme:light;
 }
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -19,19 +20,20 @@ body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font);font-
   padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));padding-block:16px;
   display:flex;flex-direction:column;gap:18px;overflow-x:hidden}
 button{font-family:inherit;cursor:pointer;color:inherit}
-button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--fg);outline-offset:2px}
 
 /* header */
 .bar{display:flex;align-items:center;gap:10px 18px;flex-wrap:wrap}
 .logo{font-weight:800;font-style:italic;font-size:1.5rem;margin-right:6px;letter-spacing:.01em}
-.logo span{color:var(--yellow)}
+.logo span{background:var(--yellow);color:var(--ink);padding:0 .2em;border-radius:4px}
 .tabs{display:flex;gap:4px;margin-right:auto}
 .tab{background:none;border:none;padding:8px 14px;border-radius:999px;font-size:1rem;color:var(--muted)}
-.tab[aria-selected="true"]{background:var(--fg);color:var(--ink);font-weight:600}
+.tab[aria-selected="true"]{background:var(--fg);color:var(--panel);font-weight:600}
+.tab .tn{display:inline-grid;place-items:center;width:1.25em;height:1.25em;border:1px solid currentColor;border-radius:50%;font-size:.75em;margin-right:6px;vertical-align:.1em}
 .tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .timer{display:flex;align-items:center;gap:2px;border:1px solid var(--line);border-radius:999px;padding:3px 4px 3px 14px}
 .timer output{font-size:1.25rem;font-weight:600;font-variant-numeric:tabular-nums;min-width:3.6em}
-.timer.done output{color:var(--yellow)}
+.timer.done output{color:var(--accent-t)}
 .tb{background:none;border:none;border-radius:999px;padding:5px 10px;font-size:.9rem;color:var(--muted)}
 .tb:hover{color:var(--fg);background:var(--panel)}
 .tb[aria-pressed="true"]{color:var(--fg);background:var(--panel)}
@@ -48,18 +50,19 @@ main{flex:1;min-height:0;display:flex}
 .wheel-wrap{width:min(72vh,100%,640px);aspect-ratio:1;justify-self:center}
 .wheel-wrap svg{width:100%;height:100%;display:block}
 .seg{fill:var(--panel);stroke:var(--line);stroke-width:1.5;transition:fill .3s}
-.seg.alt{fill:#1f1e1b}
+.seg.alt{fill:#f7f7f4}
 .seg.hit-a{fill:var(--yellow)}
 .seg.hit-b{fill:var(--fg)}
-.lab-en{fill:var(--yellow);font-weight:600;font-size:15px}
+.lab-en{fill:var(--accent-t);font-weight:600;font-size:15px}
 .lab-th{fill:var(--fg);font-size:14px}
 .hit .lab-en,.hit .lab-th{fill:var(--ink)}
-.ring{fill:none;stroke:var(--yellow);stroke-width:6}
+.hit.b .lab-en,.hit.b .lab-th{fill:var(--panel)}
+.ring{fill:none;stroke:var(--fg);stroke-width:3}
 .badge circle{fill:var(--yellow)}
 .badge text{fill:var(--ink);font-weight:800;font-size:16px}
 .hub{cursor:pointer}
-.hub circle{fill:var(--bg);stroke:var(--yellow);stroke-width:4}
-.hub:hover circle{fill:#24231f}
+.hub circle{fill:var(--bg);stroke:var(--fg);stroke-width:4}
+.hub:hover circle{fill:var(--line)}
 .hub text{fill:var(--fg);font-weight:800;font-size:24px}
 
 .side-col{display:flex;flex-direction:column;gap:22px;max-width:560px;width:100%}
@@ -72,7 +75,7 @@ main{flex:1;min-height:0;display:flex}
 .brief{display:flex;flex-direction:column;gap:6px}
 .brief .prod{font-size:clamp(2rem,3.6vw,3rem);font-weight:800;line-height:1.3;margin:0}
 .brief .who{font-size:1.2rem}
-.brief .who b{color:var(--yellow);font-weight:600}
+.brief .who b{color:var(--accent-t);font-weight:600}
 .pair{display:flex;flex-direction:column;gap:14px;border-top:1px solid var(--line);padding-top:18px}
 .row2{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;align-items:baseline}
 .dot{width:12px;height:12px;border-radius:50%;display:inline-block;transform:translateY(1px)}
@@ -82,17 +85,17 @@ main{flex:1;min-height:0;display:flex}
 .row2 .val small{font-size:.75rem;color:var(--muted);font-weight:500;margin-left:6px}
 .row2 .ex{grid-column:2;color:var(--muted);font-size:.92rem}
 .q{font-size:1.25rem;font-weight:600;line-height:1.45;margin:0;text-wrap:balance}
-.q em{font-style:normal;color:var(--yellow)}
+.q em{font-style:normal;color:var(--accent-t)}
 .empty{color:var(--muted);font-size:1.1rem;margin:0}
 .actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .cta{background:var(--yellow);color:var(--ink);border:none;border-radius:999px;padding:13px 28px;font-size:1.1rem;font-weight:600}
 .cta:hover{filter:brightness(1.06)}
 .ghost{background:none;border:1px solid var(--line);border-radius:999px;padding:11px 18px;font-size:1rem}
 .ghost:hover{border-color:var(--muted)}
-.ghost[aria-pressed="true"]{border-color:var(--yellow);color:var(--yellow)}
+.ghost[aria-pressed="true"]{border-color:var(--fg);background:var(--yellow);color:var(--ink)}
 .hint{border-left:3px solid var(--yellow);padding:4px 0 4px 14px;display:flex;flex-direction:column;gap:10px}
 .hint p{margin:0;line-height:1.5}
-.hint b{color:var(--yellow);font-weight:600}
+.hint b{color:var(--accent-t);font-weight:600}
 .link{background:none;border:none;color:var(--muted);text-decoration:underline;padding:0;font-size:.9rem;align-self:flex-start}
 .link:hover{color:var(--fg)}
 
@@ -100,7 +103,7 @@ main{flex:1;min-height:0;display:flex}
 #examples{display:flex;flex-direction:column;gap:20px}
 .bchips{display:flex;flex-wrap:wrap;gap:6px}
 .bchip{background:none;border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:.95rem}
-.bchip[aria-pressed="true"]{background:var(--fg);color:var(--ink);border-color:var(--fg);font-weight:600}
+.bchip[aria-pressed="true"]{background:var(--fg);color:var(--panel);border-color:var(--fg);font-weight:600}
 .ex-body{display:flex;gap:40px;align-items:center;flex-wrap:wrap}
 .mini{width:min(52vh,40vw,480px);aspect-ratio:1;flex:none;max-width:100%}
 @media (max-width:760px){.mini{width:min(340px,100%)}}
@@ -108,7 +111,7 @@ main{flex:1;min-height:0;display:flex}
 .ex-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:14px;max-width:640px}
 .ex-brand{font-size:clamp(2rem,4vw,3.2rem);font-weight:800;font-style:italic;margin:0;line-height:1.05}
 .ex-t{font-size:clamp(1.3rem,2.2vw,1.8rem);font-weight:600;line-height:1.4;margin:0;text-wrap:balance}
-.ex-t em{font-style:normal;color:var(--yellow)}
+.ex-t em{font-style:normal;color:var(--accent-t)}
 .ex-kv{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;margin:0}
 .ex-kv dt{color:var(--muted)}
 .ex-kv dd{margin:0}
@@ -118,6 +121,7 @@ main{flex:1;min-height:0;display:flex}
 @media (max-width:1100px){#elements{grid-template-columns:1fr}}
 #elements .pyr-r{width:100%}
 #elements .pt{width:max(72px,min(120px,calc((100% - 36px)/7)));font-size:clamp(.75rem,.95vw,.9rem);border:none;font-family:inherit}
+#elements .pt[aria-pressed="true"]{box-shadow:none}
 #elements .pt:only-child{width:auto}
 @media (max-width:600px){#elements .pt{width:104px}}
 #elements .pt:hover{background:var(--line)}
@@ -125,11 +129,14 @@ main{flex:1;min-height:0;display:flex}
 .el-info{background:var(--panel);border-radius:16px;padding:22px;position:sticky;top:16px;max-width:none}
 .el-info .ex-brand{font-size:clamp(1.8rem,3vw,2.6rem)}
 .el-th{margin:-10px 0 0;font-size:1.2rem;color:var(--muted)}
-.el-q{color:var(--yellow)}
-#elements .foot{grid-column:1/-1}
+.el-q{color:var(--accent-t)}
+#elements .foot,#elements .ph{grid-column:1/-1}
+.ph{display:flex;flex-direction:column;gap:4px}
+.ph h1{margin:0;font-size:clamp(1.5rem,2.4vw,2rem);font-weight:700;line-height:1.3}
+.ph p{margin:0;color:var(--muted);line-height:1.6}
 
 /* dialogs */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);display:grid;place-items:center;z-index:20;padding:20px}
+.overlay{position:fixed;inset:0;background:rgba(28,29,31,.45);display:grid;place-items:center;z-index:20;padding:20px}
 .dlg{background:var(--panel);border-radius:20px;padding:26px;width:min(720px,100%);max-height:90vh;overflow:auto;display:flex;flex-direction:column;gap:18px}
 .dlg h2{margin:0;font-size:1.3rem}
 .dlg label{display:flex;flex-direction:column;gap:6px;color:var(--muted);font-size:.9rem}
@@ -142,7 +149,7 @@ main{flex:1;min-height:0;display:flex}
 .ptile.used{opacity:.25}
 .pick-grid.many .ptile{width:64px;height:64px;font-size:1.6rem;border-radius:14px}
 .pick-msg{text-align:center;font-size:1.5rem;font-weight:600;margin:0;min-height:2.1rem}
-.pick-msg em{font-style:normal;color:var(--yellow)}
+.pick-msg em{font-style:normal;color:var(--accent-t)}
 .chk{flex-direction:row!important;align-items:center;gap:8px!important}
 .chk input{width:18px;height:18px;accent-color:var(--yellow)}
 @media (prefers-reduced-motion:reduce){.seg,.ptile{transition:none}}
@@ -165,8 +172,8 @@ main{flex:1;min-height:0;display:flex}
   #menu-btn,#t-mini{display:flex;align-items:center;justify-content:center;min-height:44px}
   #menu-btn{width:44px;padding:0}
   #t-mini{font-weight:600;font-variant-numeric:tabular-nums}
-  #t-mini.done{color:var(--yellow)}
-  .menu{display:none;position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.75);align-items:flex-end}
+  #t-mini.done{color:var(--accent-t)}
+  .menu{display:none;position:fixed;inset:0;z-index:20;background:rgba(28,29,31,.45);align-items:flex-end}
   .menu.open{display:flex}
   .menu-in{display:flex;flex-direction:column;gap:16px;width:100%;max-height:90vh;max-height:90dvh;overflow-y:auto;background:var(--panel);border-radius:20px 20px 0 0;padding:16px 16px max(16px,env(safe-area-inset-bottom,0px))}
   .menu-head{display:flex;align-items:center;justify-content:space-between}
@@ -223,10 +230,10 @@ main{flex:1;min-height:0;display:flex}
   <div class="menu" id="menu"><div class="menu-in">
   <div class="menu-head"><h2>เมนู</h2><button class="pill" id="menu-close">ปิด</button></div>
   <nav class="tabs" role="tablist" aria-label="เมนู">
-    <button class="tab" role="tab" id="tab-examples" aria-selected="true" data-v="examples">ตัวอย่างแบรนด์</button>
-    <button class="tab" role="tab" id="tab-elements" aria-selected="false" data-v="elements">Elements</button>
-    <button class="tab" role="tab" id="tab-live" aria-selected="false" data-v="live">Quiz</button>
-    <button class="tab" role="tab" id="tab-pyr" aria-selected="false" data-v="pyr">Pyramid</button>
+    <button class="tab" role="tab" id="tab-examples" aria-selected="true" data-v="examples"><span class="tn">1</span>ตัวอย่างแบรนด์</button>
+    <button class="tab" role="tab" id="tab-elements" aria-selected="false" data-v="elements"><span class="tn">2</span>Elements</button>
+    <button class="tab" role="tab" id="tab-pyr" aria-selected="false" data-v="pyr"><span class="tn">3</span>Pyramid</button>
+    <button class="tab" role="tab" id="tab-live" aria-selected="false" data-v="live"><span class="tn">4</span>Quiz</button>
   </nav>
   <div class="tools">
     <div class="timer" id="timer" aria-label="ตัวจับเวลา">
@@ -236,8 +243,8 @@ main{flex:1;min-height:0;display:flex}
       <button class="tb" id="t-play" aria-label="เริ่มหรือหยุดเวลา">▶</button>
       <button class="tb" id="t-reset" aria-label="เริ่มเวลาใหม่">↺</button>
     </div>
-    <button class="pill" id="open-pick">สุ่มคนเล่า</button>
-    <button class="pill" id="open-set">ตั้งค่า</button>
+    <button class="pill" id="open-pick" hidden>สุ่มคนเล่า</button>
+    <button class="pill" id="open-set" hidden>ตั้งค่า</button>
   </div>
   </div></div>
 </header>
@@ -252,6 +259,7 @@ main{flex:1;min-height:0;display:flex}
   </section>
 
   <section class="view" id="examples" aria-labelledby="tab-examples">
+    <header class="ph"><h1>ตัวอย่างแบรนด์</h1><p>เลือกแบรนด์ แล้วดูว่าแบรนด์ให้คุณค่ากับอะไร และลูกค้ายังติดที่อะไร</p></header>
     <div class="bchips" id="bchips"></div>
     <div class="ex-body">
       <div class="mini"><svg id="mini" viewBox="0 0 600 600" role="img" aria-label="วงล้อแสดงคู่คุณค่าของแบรนด์ที่เลือก"></svg></div>
@@ -261,6 +269,7 @@ main{flex:1;min-height:0;display:flex}
   </section>
 
   <section class="view" id="elements" aria-labelledby="tab-elements" hidden>
+    <header class="ph"><h1>Elements of Value</h1><p>คลิกช่องในพีระมิดเพื่อดูความหมาย ตัวอย่าง และคำถามชวนคิด</p></header>
     <div class="pyr" id="el-pyr"></div>
     <div class="ex-info el-info" id="el-info" aria-live="polite"></div>
     <p class="foot">ที่มา: Elements of Value, Bain &amp; Company · คำอธิบายและตัวอย่างเป็นการตีความเพื่อการเรียนรู้</p>
@@ -441,7 +450,7 @@ function renderEl(){
   const e=EOV[elI],d=EOVD[elI];
   $("el-info").innerHTML=e?`<span class="k">${EOVLE[e[0]]} · ${EOVL[e[0]]}</span><h2 class="ex-brand">${esc(e[2])}</h2><p class="el-th">${esc(e[1])}</p>
     <dl class="ex-kv"><dt>คืออะไร</dt><dd>${esc(d[0])}</dd><dt>ตัวอย่าง</dt><dd>${esc(d[1])}</dd><dt>ชวนคิด</dt><dd class="el-q">${esc(d[2])}</dd></dl>`
-    :`<h2 class="ex-t">คลิกช่องไหนก็ได้ในพีระมิด</h2><p style="margin:0">ดูว่าคุณค่านั้นคืออะไร พร้อมตัวอย่างแบรนด์และคำถามชวนคิด</p><p class="k" style="margin:0">ชั้นล่างคือประโยชน์ใช้งาน ยิ่งขึ้นไปข้างบนยิ่งเป็นคุณค่าที่ลึกขึ้น</p>`}
+    :`<h2 class="ex-t">ยังไม่ได้เลือกช่อง</h2><p class="k" style="margin:0">ชั้นล่างคือประโยชน์ใช้งาน ยิ่งขึ้นไปข้างบนยิ่งเป็นคุณค่าที่ลึกขึ้น</p>`}
 
 /* pick table */
 const used=new Set();let picking=false;
