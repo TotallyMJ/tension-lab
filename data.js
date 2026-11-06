@@ -42,15 +42,15 @@ const SB={url:"https://bosbwrdkyrglsmrytekj.supabase.co",key:"eyJhbGciOiJIUzI1Ni
 const CHAN=code=>"tensionlab-"+code;
 const pairName=i=>V[pairOf(i)].th+" ↔ "+V[opp(pairOf(i))].th;
 
-/* Post-class test: 7 questions from the Brand Value Proposition deck, in teaching order. c = index of correct option; options are shuffled per game. */
+/* Human Values: one best answer per question; brand applications remain open to interpretation. */
 const QFIX=[
- {p:"ลำดับการคิด Brand Value Proposition ที่ถูกต้องคือข้อไหน",o:["ขุด → เช็ค → เลือก → ทำ","เลือก → ขุด → ทำ → เช็ค","ทำ → เช็ค → ขุด → เลือก","ขุด → ทำ → เลือก → เช็ค"],c:0},
- {p:"สูตร Value Proposition คือข้อไหน",o:["Value + ใครแคร์ + เราให้อะไร + ทำไมต้องเป็นเรา","Feature + ราคา + ช่องทางขาย + โปรโมชัน","Insight + Big Idea + Execution + Media","สโลแกน + โลโก้ + พรีเซนเตอร์ + สีแบรนด์"],c:0},
- {p:"บันได Consumer Benefit Laddering เรียงจากล่างขึ้นบนคือข้อไหน",o:["Feature → Functional → Emotional → Human Value","Functional → Feature → Human Value → Emotional","Emotional → Functional → Feature → Human Value","Feature → Emotional → Functional → Human Value"],c:0},
- {p:"LEGO: “สนุก และภูมิใจในสิ่งที่ต่อเสร็จ” อยู่ขั้นไหนของบันได",o:["Emotional","Feature","Functional","Human Value"],c:0},
- {p:"3 ข้อที่ใช้เช็คว่า value ไหนดีพอ คือข้อไหน",o:["Relevant · Credible · Compelling (แคร์ · เชื่อ · อยากเลือก)","Reach · Frequency · Impact","Awareness · Interest · Desire","Unique · Simple · Memorable"],c:0},
- {p:"ทำไมต้องมีขั้น “เลือก” (Positioning)",o:["ปักหมุดว่าจะ own อะไร เพราะคู่แข่งให้ value ใกล้กันได้","เลือกสื่อและช่วงเวลาที่จะลงโฆษณา","เลือกกลุ่มเป้าหมายที่ใหญ่ที่สุดในตลาด","เลือกไอเดียโฆษณาที่ลูกค้าชอบที่สุด"],c:0},
- {p:"อย่าถามแค่ว่า “เราจะพูดอะไรดี” ให้ถามว่าอะไร",o:["ทำไมเขาต้องแคร์?","เราจะพูดให้ดังได้ยังไง?","คู่แข่งพูดอะไรอยู่?","ใช้งบเท่าไหร่ถึงจะพอ?"],c:0}
+ {p:"Human Values ของ Schwartz ช่วยให้เราเข้าใจเรื่องใด",o:["สิ่งที่คนให้ความสำคัญและใช้เป็นแนวทางในการตัดสินใจ","รายได้และอายุของผู้ซื้อ","คุณสมบัติทางเทคนิคของสินค้า","ช่องทางที่เหมาะสำหรับลงโฆษณา"],c:0},
+ {p:"อยากเลือกเส้นทางชีวิตด้วยตัวเอง สอดคล้องกับคุณค่าใดมากที่สุด",o:["Self-direction · อิสระในการคิดและเลือก","Security · ความปลอดภัย","Conformity · การทำตามกติกา","Power · สถานะและอิทธิพล"],c:0},
+ {p:"คนที่อยากลองประสบการณ์ใหม่และความท้าทาย ให้ความสำคัญกับคุณค่าใด",o:["Stimulation · ความแปลกใหม่","Tradition · การรักษาธรรมเนียม","Security · ความมั่นคง","Benevolence · การดูแลคนใกล้ตัว"],c:0},
+ {p:"การอยากพัฒนาฝีมือและได้รับการยอมรับจากผลงาน สะท้อนคุณค่าใดชัดที่สุด",o:["Achievement · ความสำเร็จ","Hedonism · ความเพลิดเพลิน","Tradition · การรักษาธรรมเนียม","Universalism · โลกส่วนรวม"],c:0},
+ {p:"การดูแลคนใกล้ตัว กับการห่วงใยคนส่วนรวมและธรรมชาติ ต่างกันอย่างไร",o:["Benevolence เน้นคนใกล้ตัว ส่วน Universalism ครอบคลุมคนส่วนรวมและธรรมชาติ","เป็นคุณค่าเดียวกันทั้งหมด","Benevolence หมายถึงอำนาจ ส่วน Universalism หมายถึงความสำเร็จ","ทั้งสองหมายถึงการทำตามกฎ"],c:0},
+ {p:"ข้อใดอธิบายการอ่านวงล้อ Human Values ได้เหมาะสมที่สุด",o:["คุณค่าใกล้กันมักมีแรงจูงใจที่เข้ากัน ส่วนบางคุณค่าอาจตึงเครียดกัน","คนหนึ่งมีได้เพียงคุณค่าเดียว","คุณค่าทุกคู่ที่อยู่ตรงข้ามกันต้องขัดแย้งเสมอ","คุณค่าด้านบนดีกว่าคุณค่าด้านล่าง"],c:0},
+ {p:"เมื่อนำ Human Values ไปตีความแบรนด์ ควรทำอย่างไร",o:["ดูบริบทและหลักฐาน พร้อมยอมรับว่าแบรนด์อาจเชื่อมได้หลายคุณค่า","กำหนดให้ทุกแบรนด์มีได้คุณค่าเดียว","ใช้โลโก้เป็นหลักฐานเพียงอย่างเดียว","สรุปว่าคนซื้อแบรนด์เดียวกันมีค่านิยมเหมือนกันทั้งหมด"],c:0}
 ];
 function buildQuiz(n){return QFIX.slice(0,n).map(q=>{const o=shuf(q.o);return{p:q.p,o,c:o.indexOf(q.o[q.c])}})}
 

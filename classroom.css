@@ -1,0 +1,137 @@
+:root{--sp-1:4px;--sp-2:8px;--sp-3:12px;--sp-4:16px;--sp-5:24px;--sp-6:32px;--sp-7:48px;--sp-8:64px;--radius:12px;--font:"Prompt","Leelawadee UI","Thonburi",system-ui,sans-serif}
+html,body{height:auto;min-height:100%;font-kerning:normal}
+/* Clip sideways overflow without creating an ancestor scroll container for sticky. */
+body{overflow-x:clip}
+#el-info{overflow-anchor:none}
+body{padding:0 32px 48px;gap:0;line-height:1.7;letter-spacing:normal;word-break:normal;text-align:left}
+button,input,textarea{font:inherit;line-height:1.6;letter-spacing:normal}
+button{touch-action:manipulation}
+button:focus-visible,a:focus-visible{outline:3px solid var(--fg);outline-offset:4px}
+.bar,main,.course-shell{max-width:1200px;width:100%;margin-inline:auto}
+.bar{min-height:88px;gap:24px;border-bottom:1px solid var(--line);padding-block:16px}
+.logo{font-size:24px;font-weight:800;font-style:normal;letter-spacing:-.025em;white-space:nowrap;margin-right:8px}
+.logo span{border-radius:0;padding:0 4px}
+.tabs{gap:24px;align-items:stretch}
+.module-tab{position:relative;background:none;border:0;padding:12px 0;min-height:48px;white-space:nowrap;font-size:16px;color:var(--muted)}
+.module-tab span{font-size:12px;margin-right:8px;font-variant-numeric:tabular-nums}
+.module-tab[aria-pressed="true"]{font-weight:600;color:var(--fg)}
+.module-tab[aria-pressed="true"]:after{content:"";position:absolute;inset:auto 0 0;height:3px;background:var(--yellow)}
+.timer{border-radius:8px;padding:4px 8px;gap:4px}.timer output{font-size:20px}.tb{border-radius:4px;padding:4px 8px;font-size:12px;min-height:32px}.pill{border-radius:8px;font-size:14px;min-height:44px}
+.course-shell{padding-block:32px 24px}
+.course-eyebrow{margin:0 0 8px;color:var(--muted);font-size:12px}
+.course-shell h1{font-size:32px;line-height:1.4;font-weight:600;margin:0;text-wrap:balance}
+.course-description{font-size:16px;color:var(--muted);margin:8px 0 24px;max-width:68ch;text-wrap:pretty}
+.course-tabs{display:flex;gap:32px;border-bottom:1px solid var(--line)}
+.course-tabs button{position:relative;padding:12px 0;background:none;border:0;min-height:48px;font-size:16px;color:var(--muted);white-space:nowrap}
+.course-tabs button[aria-selected="true"]{font-weight:600;color:var(--fg)}
+.course-tabs button[aria-selected="true"]:after{content:"";position:absolute;inset:auto 0 -1px;height:3px;background:var(--fg)}
+main{display:block;flex:none}.view{min-width:0}.learning-panel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:32px;align-items:center}
+.value-map{min-width:0;display:flex;align-items:center;justify-content:center}.value-map svg{display:block;width:min(100%,480px);height:auto;overflow:visible}
+.value-map svg [role="button"]{cursor:pointer}.value-map svg [role="button"]:focus-visible{outline:0;stroke:var(--fg);stroke-width:3px}
+.human-sector{fill:var(--bg);stroke:var(--panel);stroke-width:3}.human-sector.selected{fill:var(--yellow)}
+.human-label{font-family:var(--font);font-size:14px;font-weight:500;fill:var(--fg);pointer-events:none;letter-spacing:normal}
+.learning-detail{min-width:0;padding-left:32px;border-left:1px solid var(--line)}
+.detail-eyebrow{font-size:12px;color:var(--muted);margin:0 0 8px}
+.learning-detail h2{font-size:32px;line-height:1.3;font-weight:600;margin:0 0 8px;overflow-wrap:anywhere}
+.learning-detail h3{font-size:24px;line-height:1.4;font-weight:600;margin:0 0 16px}
+.detail-description{font-size:18px;line-height:1.7;margin:0 0 24px;text-wrap:pretty}
+.human-picker{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 24px}.human-picker button,.bchip{font-size:14px;background:none;border:1px solid var(--line);border-radius:8px;padding:8px 12px;min-height:44px}
+.human-picker button[aria-pressed="true"],.bchip[aria-pressed="true"]{background:var(--yellow);border-color:var(--yellow);color:var(--ink);font-weight:600}
+.brand-interpretation{border-top:1px solid var(--line);padding-top:24px}.brand-interpretation h4{font-size:24px;font-weight:600;margin:8px 0}.brand-interpretation p{margin:8px 0 0;line-height:1.7}.brand-interpretation .detail-eyebrow{margin:0}
+.discussion{padding:24px 0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:100px minmax(0,1fr);gap:24px}.discussion span{font-size:14px;color:var(--muted)}.discussion p{font-size:20px;line-height:1.6;margin:0;font-weight:500;text-wrap:pretty}
+.lesson-footer{display:flex;gap:24px;justify-content:space-between;align-items:center;padding-top:24px;flex-wrap:wrap}.lesson-footer p{font-size:12px;color:var(--muted);margin:0;max-width:72ch}.lesson-footer a,.source-link{color:var(--muted);text-underline-offset:4px}
+.lesson-next,.cta{border-radius:8px;background:var(--yellow);color:var(--ink);border:0;padding:12px 24px;min-height:48px;font-size:16px;font-weight:600;white-space:nowrap}
+.lesson-next:hover,.cta:hover{filter:brightness(.96)}.ghost{border-radius:8px;padding:12px 24px;min-height:48px}.actions{gap:12px}
+#examples{gap:24px}.ph{display:none}.ex-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:32px;align-items:center}.mini{width:100%;max-width:480px;margin:auto}.ex-info{gap:16px;max-width:none}.ex-brand{font-size:32px;font-style:normal;font-weight:600;line-height:1.4}.ex-t{font-size:20px;line-height:1.6;font-weight:500}.ex-kv{gap:12px 24px;font-size:16px;line-height:1.7;grid-template-columns:112px minmax(0,1fr)}.ex-kv dt{font-size:14px}.ex-kv dd{min-width:0;text-wrap:pretty}.foot{font-size:12px;line-height:1.7;margin:0}
+#elements{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:32px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:32px;align-items:start}
+#elements>.foot{grid-column:1/-1}.el-info{padding:0 0 0 24px;border-left:1px solid var(--line);min-width:0}.el-info .ex-brand{font-size:24px}.el-info .el-th{font-size:20px;margin:0;line-height:1.6}.el-info .ex-kv{display:block}.el-info dt{margin:16px 0 4px}.el-info .k{line-height:1.7;letter-spacing:normal}.pyr{gap:8px;min-width:0;width:100%}.pyr-r{width:100%;gap:4px;flex-wrap:nowrap}.pyr-l{font-size:14px;line-height:1.6;margin-top:8px}.pt{flex:1;min-width:0;width:auto;max-width:116px;min-height:72px;padding:8px 4px;border-radius:8px;font-size:12px;line-height:1.5;hyphens:none;overflow-wrap:normal;word-break:normal}.pt small{font-size:12px;line-height:1.6}.pt[aria-pressed="true"]{background:var(--yellow);color:var(--ink);box-shadow:inset 0 0 0 1px var(--fg)}.pt[aria-pressed="true"] small{color:var(--ink)}
+.element-examples{margin-top:24px;padding-top:24px;border-top:1px solid var(--line)}.element-examples h3{font-size:20px;line-height:1.4;margin:0 0 12px;font-weight:600}.element-examples p{font-size:16px;line-height:1.7;margin:0 0 16px}
+#live{padding-block:8px}.lv-start{max-width:760px;width:100%;margin:0 auto;padding:32px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);gap:24px}.lv-h{font-size:32px;line-height:1.4;font-weight:600}.lv-sub,.steps{font-size:16px;line-height:1.7}.steps{padding-left:24px}.steps li{padding:8px 0}.qp{line-height:1.4}.o4,.card p,.aw p{line-height:1.6}.o4{padding:24px;border-radius:var(--radius)}.card{padding:24px;gap:16px;border-radius:var(--radius)}.k{letter-spacing:normal}.dlg{line-height:1.7}
+.lesson-mobile-hint{display:none}
+@media(min-width:768px) and (max-width:1100px){.bar{gap:16px;flex-wrap:wrap}.menu-in{display:flex;flex:1;gap:16px;flex-wrap:wrap;align-items:center}.tabs{gap:24px}.tools{margin-left:auto}.timer .tb[id^="t-"]{padding-inline:4px}.learning-panel,.ex-body,#elements{padding:24px;gap:24px}#elements{grid-template-columns:minmax(0,1fr)}.el-info{padding:24px 0 0;border-left:0;border-top:1px solid var(--line)}}
+@media(max-width:767px){body{padding:0 16px 32px;gap:0}.bar{min-height:72px;gap:8px;padding-block:12px}.logo{font-size:20px}.course-shell{padding-block:24px}.course-shell h1{font-size:24px;line-height:1.4}.course-description{margin-bottom:16px}.course-tabs{gap:0;justify-content:space-between}.course-tabs button{font-size:14px;padding-inline:4px}.menu-in{padding:24px 16px max(24px,env(safe-area-inset-bottom));gap:24px}.tabs{gap:8px;align-items:stretch}.module-tab{text-align:left;padding:12px 16px}.module-tab[aria-pressed="true"]{background:var(--yellow);border-radius:8px}.module-tab[aria-pressed="true"]:after{display:none}.learning-panel,.ex-body{grid-template-columns:minmax(0,1fr);padding:16px;gap:24px}.value-map svg{max-width:400px}.learning-detail{padding:24px 0 0;border-left:0;border-top:1px solid var(--line)}.learning-detail h2{font-size:24px}.learning-detail h3{font-size:20px}.detail-description{font-size:16px}.human-label{font-size:15px}.human-picker{gap:8px;margin-bottom:16px}.human-picker button{font-size:12px;padding:8px}.discussion{grid-template-columns:minmax(0,1fr);gap:8px}.discussion p{font-size:18px}.lesson-footer{align-items:flex-start;gap:16px}.lesson-next{width:100%;white-space:normal}.ex-kv{grid-template-columns:minmax(0,1fr);gap:4px}.ex-kv dd{margin-bottom:12px}.ex-brand{font-size:24px}.ex-t{font-size:18px}.mini{width:100%}.mini .lab-en{font-size:17px;stroke-width:3px}#elements{grid-template-columns:minmax(0,1fr);padding:16px;gap:24px}.el-info{padding:24px 0 0;border-left:0;border-top:1px solid var(--line)}.pyr-r{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.pyr-r:has(>.pt:only-child){grid-template-columns:minmax(0,1fr)}.pt,.pt:only-child{width:100%;max-width:none;min-height:72px;padding:8px;font-size:14px}.pt small{font-size:12px}.lesson-mobile-hint{display:block;font-size:12px;color:var(--muted);margin:0}.lv-start{padding:24px 16px}.lv-h{font-size:24px}.lv-start .actions{width:100%}.lv-start .cta{width:100%;white-space:normal}.lobby-r{min-width:0}.code-b{overflow-wrap:anywhere}.opts{gap:12px}.opts label{line-height:1.7}.o4{padding:16px}.card{padding:16px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+.human-note{margin-top:16px}.menu .tabs{margin-right:auto}.learning-detail h2{font-style:normal}.value-map{align-self:center}.lesson-footer.course-shell{padding-block:24px 0}
+/* Thai relies on natural glyph spacing and room for stacked vowel marks. */
+input,select,textarea{font-family:var(--font);letter-spacing:normal;line-height:1.7}
+.course-shell h1,.learning-detail h3,.discussion p,.ex-t{word-break:normal;overflow-wrap:break-word}
+.human-picker button,.module-tab,.stage-tab{transition:background-color 120ms,color 120ms}
+.human-picker button:hover,.bchip:hover{border-color:var(--muted)}
+.human-picker button:active,.lesson-next:active{transform:translateY(1px)}
+@media(max-width:359px){.course-tabs{flex-wrap:wrap;justify-content:flex-start;column-gap:16px}.course-tabs button{padding-inline:0}.learning-detail h2{font-size:22px}}
+
+/* Fixed pyramid with a separate hover/focus/touch detail panel. */
+#elements{grid-template-columns:minmax(0,7fr) minmax(0,5fr);align-items:start}
+#el-pyr{display:flex;flex-direction:column;gap:0;min-width:0}
+.benefit-hint{font-size:14px;color:var(--muted);margin:0 0 24px}
+.benefit-tier{padding:16px 0 24px;border-bottom:1px dashed #b5b6b1}
+.benefit-tier:last-child{border-bottom:0;padding-bottom:0}
+.benefit-tier-title{font-size:16px;font-weight:500;line-height:1.7;text-align:center;margin:0 0 12px}
+.benefit-tier-title small{font-size:12px;font-weight:400;color:var(--muted);margin-left:8px}
+.benefit-tier .pyr-r{display:flex;justify-content:center;gap:4px;margin-top:4px}
+#elements .benefit-trigger{flex:1;min-width:0;max-width:116px;min-height:84px;padding:8px 4px;font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+#elements .benefit-trigger small{display:block;font-size:12px;line-height:1.6;margin-top:4px}
+#elements .benefit-trigger:hover{border-color:var(--muted)}
+#elements .el-info{position:sticky;top:24px;padding:8px 0 8px 32px;border-left:1px solid var(--line);border-top:0;min-height:440px}
+.benefit-english{font-size:16px;color:var(--muted);margin:4px 0 24px}
+.benefit-definition{font-size:18px;line-height:1.7;margin:0 0 24px}
+.benefit-example h3,.benefit-question h3{font-size:14px;font-weight:500;color:var(--muted);margin:0 0 8px}
+.benefit-example p,.benefit-question p{font-size:16px;line-height:1.7;margin:0}
+.benefit-question{margin-top:24px;padding-top:24px;border-top:1px solid var(--line)}
+@media(max-width:1100px){#elements{grid-template-columns:minmax(0,1fr)}#elements .el-info{position:static;min-height:0;padding:24px 0 0;border-left:0;border-top:1px solid var(--line)}}
+@media(max-width:767px){.benefit-tier .pyr-r{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}.benefit-tier .pyr-r:has(>button:only-child){grid-template-columns:minmax(0,1fr)}#elements .benefit-trigger{max-width:none;min-height:80px;font-size:14px;padding:12px}.benefit-definition{font-size:16px}}
+
+/* Benefit descriptions open on click in a modal, outside the page layout. */
+#elements{grid-template-columns:minmax(0,1fr)}
+#el-pyr{max-width:900px;margin-inline:auto}
+html{scrollbar-gutter:stable}
+html.benefit-modal-open{overflow:hidden}
+#benefit-dialog{width:min(640px,calc(100% - 32px));max-height:calc(100dvh - 48px);padding:0;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--fg);font-family:var(--font);line-height:1.7;overflow:auto;overscroll-behavior:contain}
+#benefit-dialog::backdrop{background:rgba(28,29,31,.48)}
+.benefit-dialog-header{position:sticky;top:0;display:flex;align-items:center;justify-content:space-between;gap:16px;background:var(--panel);padding:24px 32px 16px;border-bottom:1px solid var(--line)}
+#benefit-dialog-title{font-size:24px;line-height:1.4;font-weight:600;margin:0}
+#benefit-dialog-close{flex-shrink:0;min-height:44px;padding:8px 12px;border:0;background:var(--bg);border-radius:8px;font-size:14px}
+#benefit-dialog-body{padding:24px 32px 32px}
+@media(max-width:767px){.benefit-dialog-header{padding:16px}#benefit-dialog-title{font-size:20px}#benefit-dialog-body{padding:16px 16px 24px}}
+/* Reading dialog: editorial hierarchy, generous Thai leading, one highlighted case. */
+#benefit-dialog{width:min(720px,calc(100% - 32px));max-height:calc(100dvh - 64px);border:0;border-radius:16px;box-shadow:0 24px 80px rgba(18,18,16,.2);scrollbar-gutter:stable}
+.benefit-dialog-header{padding:28px 40px 20px;z-index:1;gap:24px}
+#benefit-dialog-title{font-size:28px;line-height:1.5;max-width:24ch;text-wrap:balance}
+#benefit-dialog-close{background:none;border:1px solid var(--line);padding:8px 16px}
+#benefit-dialog-close:hover{background:var(--bg)}
+#benefit-dialog-body{padding:24px 40px 32px;letter-spacing:normal;word-break:normal}
+#benefit-dialog-body .detail-eyebrow{font-size:14px;line-height:1.7;margin:0;color:var(--accent-t)}
+#benefit-dialog-body .detail-eyebrow span{color:var(--muted)}
+#benefit-dialog-body .benefit-english{font-size:16px;margin:4px 0 20px}
+.benefit-lead{font-size:24px;line-height:1.6;font-weight:500;margin:0 0 28px;max-width:32ch;text-wrap:pretty}
+.benefit-reading{margin:24px 0}
+.benefit-reading h3,.benefit-case h3,.benefit-distinction h3,#benefit-dialog .benefit-question h3{font-size:14px;font-weight:500;line-height:1.7;color:var(--muted);margin:0 0 8px}
+.benefit-reading p,.benefit-case p,.benefit-distinction p{font-size:18px;line-height:1.8;margin:0;text-wrap:pretty}
+.benefit-case{padding:24px;background:#f7f7f2;border-left:3px solid var(--yellow);margin:28px 0}
+.benefit-caption{display:block;font-size:12px;line-height:1.7;color:var(--muted);margin-top:16px}
+.benefit-distinction{padding-top:20px;border-top:1px solid var(--line);margin:28px 0}
+#benefit-dialog .benefit-distinction p{font-size:16px}
+#benefit-dialog .benefit-question{border-top:0;padding-top:0;margin:28px 0}
+#benefit-dialog .benefit-question p{font-size:20px;line-height:1.7;font-weight:500}
+.benefit-source{border-top:1px solid var(--line);padding-top:20px;font-size:12px;line-height:1.8;color:var(--muted)}
+.benefit-source a{color:inherit;text-underline-offset:3px}
+@media(max-width:767px){#benefit-dialog{max-height:calc(100dvh - 32px)}.benefit-dialog-header{padding:20px;gap:12px}#benefit-dialog-title{font-size:22px}#benefit-dialog-body{padding:20px}.benefit-lead{font-size:20px;margin-bottom:24px}.benefit-reading p,.benefit-case p{font-size:16px}.benefit-case{padding:16px;margin:24px 0}#benefit-dialog .benefit-question p{font-size:18px}#benefit-dialog-close{padding:8px 12px}}
+/* Compact reading view, English topic with Thai explanation below. */
+#benefit-dialog{width:min(840px,calc(100% - 32px))}
+.benefit-dialog-header{padding:20px 28px 16px;align-items:flex-start}
+.benefit-dialog-heading{min-width:0}
+#benefit-dialog-title{font-size:26px;line-height:1.3;max-width:none;text-wrap:balance}
+#benefit-dialog-subtitle{font-size:16px;line-height:1.7;font-weight:400;color:var(--muted);margin:4px 0 0}
+#benefit-dialog-body{padding:16px 28px 20px}
+.benefit-summary{font-size:16px;line-height:1.7;margin:8px 0 16px;text-wrap:pretty}
+#benefit-dialog .benefit-case{padding:16px 20px;margin:16px 0}
+#benefit-dialog .benefit-case p,#benefit-dialog .benefit-reading p,#benefit-dialog .benefit-distinction p{font-size:16px;line-height:1.7}
+.benefit-compact-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:16px 0}
+#benefit-dialog .benefit-reading,#benefit-dialog .benefit-distinction{margin:0;padding:0;border:0}
+#benefit-dialog .benefit-reading h3,#benefit-dialog .benefit-case h3,#benefit-dialog .benefit-distinction h3{margin-bottom:4px}
+#benefit-dialog .benefit-question{display:flex;align-items:baseline;gap:16px;margin:16px 0;padding-top:12px;border-top:1px solid var(--line)}
+#benefit-dialog .benefit-question h3{flex-shrink:0;margin:0}
+#benefit-dialog .benefit-question p{font-size:18px;line-height:1.6}
+.benefit-source{padding-top:12px;font-size:12px;line-height:1.7}
+@media(max-width:600px){.benefit-dialog-header{padding:16px}#benefit-dialog-title{font-size:22px}#benefit-dialog-body{padding:12px 16px 16px}.benefit-compact-grid{grid-template-columns:minmax(0,1fr);gap:16px}#benefit-dialog .benefit-case{padding:12px 16px}#benefit-dialog .benefit-question{display:block}#benefit-dialog .benefit-question h3{margin-bottom:4px}}

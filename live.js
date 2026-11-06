@@ -171,19 +171,19 @@ function pyramid(c){const mx=Math.max(1,...c),top=c.indexOf(Math.max(...c)),zero
 function renderLive(){
   const el=document.getElementById("live");if(!el)return;
   const tm=window.liveTab==="pyr"?"pyr":"quiz";
-  if(!L&&tm==="pyr"){el.innerHTML=`<div class="lv-start"><h2 class="lv-h">Pyramid</h2>
-    <p class="lv-sub">Elements of Value · ผู้เล่นสแกน QR แล้วตั้งชื่อเล่น ไม่ต้องสมัครหรือติดตั้งอะไร</p>
+  if(!L&&tm==="pyr"){el.innerHTML=`<div class="lv-start"><h2 class="lv-h">Pyramid Lab</h2>
+    <p class="lv-sub">แบบฝึกประยุกต์ Elements of Value · เลือกคุณค่า เขียน VP และแลกเปลี่ยนเหตุผล ไม่มีคำตอบเดียว</p>
     <ol class="steps"><li><b>เลือก</b> ทุกคนเลือก 3 ช่องที่กลุ่มเป้าหมายแคร์ที่สุด</li><li><b>ดูภาพรวม</b> พีระมิดขึ้นสีตามจำนวนคนเลือก</li><li><b>เขียน VP</b> หยิบ 1 ช่องมาเขียน ใครแคร์ เราให้อะไร ทำไมต้องเป็นเรา</li><li><b>โหวต</b> เลือก VP ที่ชอบ แล้วประกาศผล</li></ol>
-    <div class="actions"><button class="cta" id="lv-new">เปิดห้อง Pyramid</button></div></div>`;
+    <div class="actions"><button class="cta" id="lv-new">เปิดห้อง Pyramid Lab</button></div></div>`;
     document.getElementById("lv-new").onclick=()=>newRoom("pyr");return}
-  if(L&&(L.mode||"quiz")!==tm){const rm=L.mode==="pyr"?"Pyramid":"Quiz";
-    el.innerHTML=`<div class="lv-start"><h2 class="lv-h">ห้อง ${rm} เปิดอยู่</h2><p class="lv-sub">รหัสห้อง ${L.code} · ปิดห้องนี้ก่อน จึงจะเริ่ม ${tm==="pyr"?"Pyramid":"Quiz"} ได้</p>
+  if(L&&(L.mode||"quiz")!==tm){const rm=L.mode==="pyr"?"Pyramid Lab":"Value Lab";
+    el.innerHTML=`<div class="lv-start"><h2 class="lv-h">ห้อง ${rm} เปิดอยู่</h2><p class="lv-sub">รหัสห้อง ${L.code} · ปิดห้องนี้ก่อน จึงจะเริ่ม ${tm==="pyr"?"Pyramid Lab":"Value Lab"} ได้</p>
     <div class="actions"><button class="cta" id="lv-goto">ไปที่ห้อง ${rm}</button><button class="link" id="lv-end">ปิดห้อง</button></div></div>`;
     document.getElementById("lv-goto").onclick=()=>showTab(L.mode==="pyr"?"pyr":"live");document.getElementById("lv-end").onclick=endRoom;return}
-  if(!L){el.innerHTML=`<div class="lv-start"><h2 class="lv-h">Quiz หลังเรียน</h2>
-    <p class="lv-sub">Brand Value Proposition · ผู้เล่นสแกน QR แล้วตั้งชื่อเล่น ไม่ต้องสมัครหรือติดตั้งอะไร</p>
+  if(!L){el.innerHTML=`<div class="lv-start"><h2 class="lv-h">Value Lab</h2>
+    <p class="lv-sub">ทบทวน Human Values ผ่าน 7 คำถาม · ผู้เรียนสแกน QR แล้วตอบจากมือถือ</p>
     <ol class="steps"><li><b>ตอบ</b> เลือกคำตอบในมือถือ ตอบถูกและเร็วได้คะแนนมากกว่า</li><li><b>เฉลย</b> ดูเฉลยและอันดับหลังทุกข้อ</li><li><b>ประกาศผล</b> ครบทุกข้อแล้วประกาศผู้ชนะ 3 อันดับ</li></ol>
-    <div class="actions"><button class="cta" id="lv-new">เปิดห้องควิซ</button></div></div>`;
+    <div class="actions"><button class="cta" id="lv-new">เปิดห้อง Value Lab</button></div></div>`;
     document.getElementById("lv-new").onclick=()=>newRoom("quiz");return}
   let h="";const P=L.phase;
   if(P==="lobby"){

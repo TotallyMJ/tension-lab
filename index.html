@@ -1,10 +1,10 @@
 <!doctype html>
 <html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Value Lab</title>
+<title>Tension Lab · เรียนรู้คุณค่าและแบรนด์</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,400;0,500;0,600;0,800;1,800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,400;0,500;0,600;0,700;0,800;1,800&display=swap">
 <style>
 /* Cloud white theme: yellow is a fill behind dark text, never text on white (use --accent-t for gold text). */
 :root{
@@ -223,20 +223,16 @@ main{flex:1;min-height:0;display:flex}
 }
 </style>
 <link rel="stylesheet" href="live.css">
+<link rel="stylesheet" href="classroom.css">
 </head><body>
 
 <header class="bar">
-  <div class="logo">VALUE <span>LAB</span></div>
+  <div class="logo">TENSION <span>LAB</span></div>
   <button class="pill" id="t-mini" aria-label="ตัวจับเวลา เปิดเมนู" hidden></button>
   <button class="pill" id="menu-btn" aria-label="เปิดเมนู" aria-expanded="false" aria-controls="menu"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14"/></svg></button>
   <div class="menu" id="menu"><div class="menu-in">
   <div class="menu-head"><h2>เมนู</h2><button class="pill" id="menu-close">ปิด</button></div>
-  <nav class="tabs" role="tablist" aria-label="เมนู">
-    <button class="tab" role="tab" id="tab-examples" aria-selected="true" data-v="examples"><span class="tn">1</span>ตัวอย่างแบรนด์</button>
-    <button class="tab" role="tab" id="tab-elements" aria-selected="false" data-v="elements"><span class="tn">2</span>Elements</button>
-    <button class="tab" role="tab" id="tab-pyr" aria-selected="false" data-v="pyr"><span class="tn">3</span>Pyramid</button>
-    <button class="tab" role="tab" id="tab-live" aria-selected="false" data-v="live"><span class="tn">4</span>Quiz</button>
-  </nav>
+  <nav class="tabs" aria-label="บทเรียน"><button class="module-tab" data-course="human" aria-pressed="true"><span>01</span>Human Values</button><button class="module-tab" data-course="benefits" aria-pressed="false"><span>02</span>Brand Benefits</button></nav>
   <div class="tools">
     <div class="timer" id="timer" aria-label="ตัวจับเวลา">
       <output id="t-out">05:00</output>
@@ -251,7 +247,14 @@ main{flex:1;min-height:0;display:flex}
   </div></div>
 </header>
 
+<div class="course-shell"><p class="course-eyebrow" id="course-eyebrow"></p><h1 id="course-title"></h1><p class="course-description" id="course-description"></p><nav class="course-tabs" id="course-tabs" role="tablist" aria-label="ขั้นตอนการเรียน"><button class="stage-tab" id="stage-learn" role="tab" data-stage="learn" aria-selected="true">เรียนรู้</button><button class="stage-tab" id="stage-quiz" role="tab" data-stage="quiz" aria-selected="false" tabindex="-1">Quiz · Value Lab</button></nav></div>
 <main>
+<section class="view" id="human-lesson" aria-label="เรียนรู้ Human Values" hidden>
+<div class="human-picker" id="human-picker" aria-label="เลือกคุณค่าที่ต้องการเรียนรู้"></div>
+<div class="learning-panel"><div class="value-map"><svg id="human-map" viewBox="0 0 600 600" role="group" aria-label="สำรวจคุณค่าพื้นฐาน 10 กลุ่ม"></svg></div><div class="learning-detail" id="human-detail" aria-live="polite"></div></div>
+<div class="discussion"><span>ชวนคิด</span><p id="human-question"></p></div>
+<p class="foot human-note">คนหนึ่งให้ความสำคัญได้หลายคุณค่า และเลือกต่างกันตามสถานการณ์ วงล้อแสดงความใกล้เคียงและความตึงเครียดระหว่างแรงจูงใจ ไม่ใช่การแบ่งคนเป็น 10 ประเภท</p>
+</section>
   <section class="view" id="play" hidden>
     <div class="wheel-wrap"><svg id="wheel" viewBox="0 0 600 600" role="img" aria-label="วงล้อคุณค่าพื้นฐาน 10 กลุ่ม"></svg></div>
     <div class="side-col" id="side">
@@ -260,26 +263,31 @@ main{flex:1;min-height:0;display:flex}
     </div>
   </section>
 
-  <section class="view" id="examples" aria-labelledby="tab-examples">
+  <section class="view" id="examples" aria-label="ตัวอย่างแบรนด์กับ Human Values">
     <header class="ph"><h1>ตัวอย่างแบรนด์</h1><p>เลือกแบรนด์ แล้วดูว่าแบรนด์ให้คุณค่ากับอะไร และลูกค้ายังติดที่อะไร</p></header>
     <div class="bchips" id="bchips"></div>
     <div class="ex-body">
-      <div class="mini"><svg id="mini" viewBox="0 0 600 600" role="img" aria-label="วงล้อแสดงคู่คุณค่าของแบรนด์ที่เลือก"></svg></div>
+      <div class="mini"><svg id="mini" viewBox="0 0 600 600" role="img" aria-label="วงล้อแสดงคุณค่าที่เชื่อมกับแบรนด์ที่เลือก"></svg></div>
       <div class="ex-info" id="ex-info"></div>
     </div>
     <p class="foot">ตัวอย่างเป็นการตีความเพื่อการเรียนรู้ ไม่ใช่ข้อมูลจากแบรนด์</p>
   </section>
 
-  <section class="view" id="elements" aria-labelledby="tab-elements" hidden>
+  <section class="view" id="elements" aria-label="เรียนรู้ Elements of Value" hidden>
     <header class="ph"><h1>Elements of Value</h1><p>คลิกช่องในพีระมิดเพื่อดูความหมาย ตัวอย่าง และคำถามชวนคิด</p></header>
     <div class="pyr" id="el-pyr"></div>
     <div class="ex-info el-info" id="el-info" aria-live="polite"></div>
     <p class="foot">ที่มา: Elements of Value, Bain &amp; Company · คำอธิบายและตัวอย่างเป็นการตีความเพื่อการเรียนรู้</p>
   </section>
 
-  <section class="view" id="live" aria-labelledby="tab-live" hidden></section>
+  <section class="view" id="live" aria-label="กิจกรรมท้ายบท" hidden></section>
 </main>
+<footer class="lesson-footer course-shell" id="lesson-bottom"><p id="lesson-source"></p><button class="lesson-next" id="lesson-next">ดูตัวอย่างแบรนด์ →</button></footer>
 
+<dialog id="benefit-dialog" aria-labelledby="benefit-dialog-title">
+  <header class="benefit-dialog-header"><div class="benefit-dialog-heading"><h2 id="benefit-dialog-title" lang="en"></h2><p id="benefit-dialog-subtitle"></p></div><button id="benefit-dialog-close" aria-label="ปิดคำอธิบาย" autofocus>ปิด ×</button></header>
+  <div id="benefit-dialog-body"></div>
+</dialog>
 <div class="overlay" id="pick-dlg" hidden>
   <div class="dlg" role="dialog" aria-modal="true" aria-labelledby="pick-h">
     <h2 id="pick-h">สุ่มคนหรือกลุ่มที่จะออกมาเล่า</h2>
@@ -418,10 +426,10 @@ function renderTables(){}
 /* examples */
 let exI=0;
 const KIND={opp:"คู่ตรงข้ามบนวงล้อ",near:"อยู่ใกล้คู่ตรงข้าม",sit:"มาจากสถานการณ์"};
-function miniWheel(a,b){
+function miniWheel(a,b,brand=EX[exI].b){
   let h="";for(let i=0;i<10;i++){const [x0,y0]=pt(R,i*36-18),[x1,y1]=pt(R,i*36+18);const cls=i===a?" hit-a":i===b?" hit-b":(i%2?" alt":"");h+=`<path class="seg${cls}" d="M${C},${C} L${x0},${y0} A${R},${R} 0 0 1 ${x1},${y1} Z"/>`}
   for(let i=0;i<10;i++){const [lx,ly]=pt(190,i*36);h+=`<g class="${i===a?"hit a":i===b?"hit b":""}"><text text-anchor="middle" x="${lx}" y="${ly+6}" class="lab-en">${V[i].en}</text></g>`}
-  h+=`<circle class="ring" cx="${C}" cy="${C}" r="${R}"/><circle cx="${C}" cy="${C}" r="60" fill="#0f0f0d" stroke="#ffe500" stroke-width="4"/><text x="${C}" y="${C+8}" text-anchor="middle" fill="#f6f4ec" font-weight="800" font-size="${EX[exI].b.length>7?19:24}">${esc(EX[exI].b)}</text>`;return h}
+  h+=`<circle class="ring" cx="${C}" cy="${C}" r="${R}"/><circle cx="${C}" cy="${C}" r="60" fill="#0f0f0d" stroke="#ffe500" stroke-width="4"/><text x="${C}" y="${C+8}" text-anchor="middle" fill="#f6f4ec" font-weight="800" font-size="${brand.length>7?19:24}">${esc(brand)}</text>`;return h}
 function renderEx(){
   $("bchips").innerHTML=EX.map((e,i)=>`<button class="bchip" aria-pressed="${i===exI}" data-i="${i}">${esc(e.b)}</button>`).join("");
   $("bchips").querySelectorAll(".bchip").forEach(x=>x.onclick=()=>{exI=+x.dataset.i;renderEx()});
@@ -443,7 +451,7 @@ function beep(){if(!actx)return;try{[0,.35,.7].forEach(t=>{const o=actx.createOs
 $("t-2").onclick=()=>setTimer(120);$("t-5").onclick=()=>setTimer(300);$("t-play").onclick=()=>tInt?stopTimer():startTimer();$("t-reset").onclick=()=>setTimer(tSet);
 
 /* elements of value: teaching view, same tier rows as the Pyramid heatmap */
-let elI=null;
+let elI=16;
 function renderEl(){
   $("el-pyr").innerHTML=EOVL.map((t,l)=>{const ids=EOV.map((e,i)=>e[0]===l?i:-1).filter(i=>i>=0),per=ids.length>7?Math.ceil(ids.length/2):ids.length;let rows="";
     for(let j=0;j<ids.length;j+=per)rows+=`<div class="pyr-r">${ids.slice(j,j+per).map(i=>`<button class="pt" data-i="${i}" aria-pressed="${i===elI}">${eovH(i)}</button>`).join("")}</div>`;
@@ -452,7 +460,7 @@ function renderEl(){
   const e=EOV[elI],d=EOVD[elI];
   $("el-info").innerHTML=e?`<span class="k">${EOVLE[e[0]]} · ${EOVL[e[0]]}</span><h2 class="ex-brand">${esc(e[2])}</h2><p class="el-th">${esc(e[1])}</p>
     <dl class="ex-kv"><dt>คืออะไร</dt><dd>${esc(d[0])}</dd><dt>ตัวอย่าง</dt><dd>${esc(d[1])}</dd><dt>ชวนคิด</dt><dd class="el-q">${esc(d[2])}</dd></dl>`
-    :`<h2 class="ex-t">ยังไม่ได้เลือกช่อง</h2><p class="k" style="margin:0">ชั้นล่างคือประโยชน์ใช้งาน ยิ่งขึ้นไปข้างบนยิ่งเป็นคุณค่าที่ลึกขึ้น</p>`}
+    :`<h2 class="ex-t">ยังไม่ได้เลือกช่อง</h2><p class="k" style="margin:0">ชั้นล่างคือประโยชน์ใช้งาน แต่ละชั้นเป็นคุณค่าคนละด้าน ไม่จำเป็นต้องไล่ขึ้นตามลำดับ</p>`}
 
 /* pick table */
 const used=new Set();let picking=false;
@@ -479,5 +487,5 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"){document.querySelec
 buildWheel();setNeedle();render();paint();
 </script>
 <script src="live.js"></script>
-<script>render();showTab(typeof L!=="undefined"&&L&&L.code?(L.mode==="pyr"?"pyr":"live"):"examples");</script>
+<script src="classroom.js"></script>
 </body></html>

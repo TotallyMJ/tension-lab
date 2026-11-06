@@ -47,3 +47,15 @@ Inherits `../DESIGN-DEFAULTS.md` + `../ANTI-SLOP.md`. Real values live in `:root
 - 2026-11-06 เจ้าของงานเลือกแบบ B: ขนาดตัวอักษร 6 ขั้น (`--fs-xs` ถึง `--fs-2xl`) ใน `:root` ของทั้งสองหน้า + `--fs-3xl` เฉพาะตัวเลขบนจอฉาย · หน้าจอเกม Quiz และ Pyramid ทุกหน้าใช้ token แทนค่า rem/px ลอย · ไทยไม่ต่ำกว่า 12px (ชื่อไทยใต้ช่องพีระมิด) · จอแคบกว่า 768px คำถามลดเป็น `--fs-xl` คำตอบเป็น `--fs-l` ช่องพีระมิดเป็น `--fs-xs`
 - 2026-11-06 มือถือ (`play.html`) ใช้ระยะ `--sp-1..8` (4/8) · ตัวหนังสือหลัก 16px line-height 1.6 · การ์ดและตัวเลือกห่างกัน 12 · padding ในกรอบ 16 · หัวกลุ่มช่องพีระมิดห่างด้านบน 24 ด้านล่าง 8
 - 2026-11-06 เจ้าของงานเลือกแบบ B: สีปุ่มคำตอบ 4 สีเข้มขึ้นเท่ากัน ตัวหนังสือขาวชัด ≥5.2:1 (เผื่อโปรเจกเตอร์ทำสีจาง) แดง `#c73828` · น้ำเงิน `#2969d1` · ทอง `#856907` · เขียว `#207b4b` · ต้องตรงกันทั้ง `live.css` และ `play.html`
+
+
+## 2026-11-06 — Open Classroom
+- ชื่อเว็บหลัก Tension Lab; เมนูหลัก 2 บท: Human Values (Schwartz) และ Brand Benefits (Bain B2C 30 elements).
+- ภายในแต่ละบท: เรียนรู้ / ตัวอย่างแบรนด์ / Quiz. ชื่อกิจกรรม Value Lab และ Pyramid Lab ตามลำดับ. จดจำแท็บของแต่ละบทขณะใช้งาน.
+- Value Lab ทบทวน Human Values 7 ข้อ; Pyramid Lab เป็นกิจกรรมประยุกต์เลือกคุณค่าและเขียน VP ไม่ใช่แบบทดสอบคำตอบเดียว. รักษาระบบห้อง/QR/คะแนนเดิม.
+- ทิศทาง A: เมนูด้านบน พื้นที่เรียน 2 คอลัมน์ คำถามแยกจากปุ่ม. มือถือเรียงคอลัมน์เดียว พีระมิดปรับเป็นช่องตามระดับโดยไม่บีบข้อความไทย.
+- Prompt 400/500/600/700/800; หัวข้อไทย 32px desktop / 24px mobile, line-height 1.4; เนื้อหา 18px / 16px, line-height 1.7; letter-spacing normal, font-kerning normal, ไม่เอียงภาษาไทย.
+- spacing 4/8: ขอบแผงและช่องคอลัมน์ 32px (mobile 16/24), กลุ่มเนื้อหา 24px, หัวข้อถึงคำอธิบาย 8/12px. สีเหลืองเป็นพื้น selected / primary action.
+- classroom.css และ classroom.js ดูแลโครงสร้างห้องเรียน; index.html/live.js เก็บเกมและการเชื่อมต่อเดิม. ตัวอย่างแบรนด์เป็นการตีความเพื่อเรียนรู้ พร้อมแหล่งอ้างอิงทฤษฎีในหน้า.
+
+- 2026-11-06: Removed the separate brand examples stage. Each lesson now has Learn / Quiz; examples remain within Learn. Next action opens the lesson quiz directly.
