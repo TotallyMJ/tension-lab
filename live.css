@@ -2,15 +2,15 @@
 #live{display:flex;flex-direction:column;gap:22px;min-width:0}
 .k b.code{color:var(--yellow);font-size:1.05em}
 .conn{color:var(--muted)}.conn.on{color:#7be38f}.conn.error{color:#ff8a7a}
-.lv-start{max-width:760px;display:flex;flex-direction:column;gap:18px;margin-top:4vh}
-.lv-h{font-size:clamp(1.8rem,3vw,2.4rem);font-weight:800;margin:0;line-height:1.25}
+.lv-start{max-width:760px;display:flex;flex-direction:column;gap:18px;margin:4vh auto 0;align-items:center;text-align:center}
+.lv-h{font-size:clamp(1.8rem,3vw,2.4rem);font-weight:800;margin:0;line-height:1.25;text-align:center}
 .lv-sub{font-size:1.15rem;color:var(--muted);margin:0;line-height:1.5}
-.steps{margin:0;padding-left:1.4em;display:flex;flex-direction:column;gap:8px;font-size:1.1rem}
+.steps{margin:0;padding-left:1.4em;text-align:left;display:flex;flex-direction:column;gap:8px;font-size:1.1rem}
 .steps b{color:var(--yellow);font-weight:600;margin-right:6px}
-.lobby{display:flex;gap:48px;align-items:center;flex-wrap:wrap}
+.lobby{display:flex;gap:48px;align-items:center;justify-content:center;flex-wrap:wrap}
 .qr-b{width:min(52vh,380px,100%);aspect-ratio:1;background:#fff;border-radius:18px;padding:10px;flex:none}
 .qr-b svg,.qr-s svg{width:100%;height:100%;display:block}
-.lobby-r{flex:1;min-width:min(280px,100%);display:flex;flex-direction:column;gap:8px}
+.lobby-r{flex:0 1 560px;min-width:min(280px,100%);display:flex;flex-direction:column;gap:8px}
 .lv-url{font-size:1.05rem;font-weight:600;overflow-wrap:anywhere}
 .lv-url.big{font-size:clamp(1.2rem,2vw,1.6rem)}
 .code-b{font-size:clamp(3rem,7vw,5rem);font-weight:800;color:var(--yellow);letter-spacing:.08em;line-height:1.1}
@@ -25,7 +25,8 @@
 .lv-meta{display:flex;align-items:center;gap:18px}
 .count{font-size:clamp(2.4rem,5vw,3.6rem);font-weight:800;font-variant-numeric:tabular-nums;color:var(--yellow);min-width:2ch;text-align:right;line-height:1}
 .count.low{color:#ff8a7a}
-.qp{font-size:clamp(1.6rem,3vw,2.5rem);font-weight:700;line-height:1.35;margin:0;text-wrap:balance}
+.qp{font-size:clamp(1.6rem,3vw,2.5rem);font-weight:700;line-height:1.35;margin:0;text-wrap:balance;text-align:center}
+#live>.actions{justify-content:center}
 .opts4{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 @media (max-width:760px){.opts4{grid-template-columns:1fr}}
 .o4{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:6px 16px;border-radius:18px;padding:18px 22px;color:#fff;font-size:clamp(1.1rem,1.9vw,1.5rem);font-weight:600;line-height:1.35;transition:opacity .3s}
