@@ -12,7 +12,7 @@ function liveOn(){return !!(L&&L.code)}
 
 function newRoom(){
   const old=L&&L.opt;
-  L={code:String(Math.floor(1000+Math.random()*9000)),phase:"lobby",players:{},ban:[],opt:old||{qn:6,qs:20,cs:180},quiz:null,cr:null,round:0,hist:[]};
+  L={code:String(Math.floor(1000+Math.random()*9000)),phase:"lobby",players:{},ban:[],opt:old||{qn:7,qs:20,cs:180},quiz:null,cr:null,round:0,hist:[]};
   lsave();connect();renderLive();
 }
 function endRoom(){if(ch){try{sb.removeChannel(ch)}catch(e){}}ch=null;L=null;try{localStorage.removeItem(LKEY)}catch(e){}conn="off";clearInterval(hbT);renderLive();render()}
@@ -142,10 +142,10 @@ function head(right){return`<div class="lv-top"><div class="lv-join"><div class=
 
 function renderLive(){
   const el=document.getElementById("live");if(!el)return;
-  if(!L){el.innerHTML=`<div class="lv-start"><h2 class="lv-h">เล่นพร้อมกันผ่านมือถือ</h2>
-    <p class="lv-sub">ผู้เล่นสแกน QR แล้วตั้งชื่อเล่น ไม่ต้องสมัครหรือติดตั้งอะไร ตอบทุกอย่างในมือถือ ไม่ต้องพูดหน้าห้อง</p>
-    <ol class="steps"><li><b>อุ่นเครื่อง</b> ควิซสั้น ๆ ตอบถูกและเร็วได้คะแนน</li><li><b>คิดงาน</b> หมุนวงล้อแล้วทุกคนพิมพ์ตอบ ส่งคำตอบได้ +100</li><li><b>โหวต</b> คำตอบขึ้นจอแบบไม่มีชื่อ ได้โหวตละ +100 · ผู้สอนเลือก Judge’s pick +300</li></ol>
-    <div class="actions"><button class="cta" id="lv-new">เปิดห้องใหม่</button></div></div>`;
+  if(!L){el.innerHTML=`<div class="lv-start"><h2 class="lv-h">Quiz หลังเรียน</h2>
+    <p class="lv-sub">Brand Value Proposition · ผู้เล่นสแกน QR แล้วตั้งชื่อเล่น ไม่ต้องสมัครหรือติดตั้งอะไร</p>
+    <ol class="steps"><li><b>ตอบ</b> เลือกคำตอบในมือถือ ตอบถูกและเร็วได้คะแนนมากกว่า</li><li><b>เฉลย</b> ดูเฉลยและอันดับหลังทุกข้อ</li><li><b>ประกาศผล</b> ครบทุกข้อแล้วประกาศผู้ชนะ 3 อันดับ</li></ol>
+    <div class="actions"><button class="cta" id="lv-new">เปิดห้องควิซ</button></div></div>`;
     document.getElementById("lv-new").onclick=newRoom;return}
   let h="";const P=L.phase;
   if(P==="lobby"){
@@ -155,14 +155,14 @@ function renderLive(){
       <div class="k">รหัสห้อง</div><div class="code-b">${L.code}</div>
       <div class="k">ผู้เล่น ${ids.length} คน · <span id="lv-conn" class="conn ${conn}">${conn==="on"?"เชื่อมต่อแล้ว":"กำลังเชื่อมต่อ…"}</span>${ids.length?" · แตะชื่อ 2 ครั้งเพื่อนำออก":""}</div>
       <div class="names">${ids.map(id=>`<button class="nchip${kickArm===id?" arm":""}" data-k="${id}">${nm(id)}${kickArm===id?" ✕":""}</button>`).join("")}</div>
-      <div class="opts"><label>ควิซ <input type="number" id="o-qn" min="2" max="15" value="${L.opt.qn}"> ข้อ</label><label>ข้อละ <input type="number" id="o-qs" min="10" max="60" value="${L.opt.qs}"> วินาที</label><label>เวลาคิดงาน <input type="number" id="o-cs" min="1" max="10" value="${Math.round(L.opt.cs/60)}"> นาที</label></div>
-      <div class="actions"><button class="cta" id="lv-quiz">เริ่มรอบอุ่นเครื่อง</button><button class="ghost" id="lv-wheel">ข้ามไปรอบคิดงาน</button><button class="link" id="lv-end">ปิดห้อง</button></div>
+      <div class="opts"><label>ควิซ <input type="number" id="o-qn" min="2" max="7" value="${L.opt.qn}"> ข้อ</label><label>ข้อละ <input type="number" id="o-qs" min="10" max="60" value="${L.opt.qs}"> วินาที</label></div>
+      <div class="actions"><button class="cta" id="lv-quiz">เริ่มควิซ</button><button class="link" id="lv-end">ปิดห้อง</button></div>
     </div></div>`;
   }else if(P==="quiz"||P==="quizReveal"){
     const q=L.quiz,Q=q.list[q.i],rev=P==="quizReveal";const cnt=[0,0,0,0];Object.values(q.ans).forEach(a=>cnt[a.c]++);const mx=Math.max(1,...cnt);
-    h=head(`<div class="lv-meta"><span class="k">อุ่นเครื่อง ข้อ ${q.i+1}/${q.list.length}</span>${rev?"":`<div class="count" id="lv-count">${q.dur}</div>`}</div>`)+
+    h=head(`<div class="lv-meta"><span class="k">ข้อ ${q.i+1}/${q.list.length}</span>${rev?"":`<div class="count" id="lv-count">${q.dur}</div>`}</div>`)+
     `<h2 class="qp">${esc(Q.p)}</h2><div class="opts4">${Q.o.map((o,i)=>`<div class="o4 c${i}${rev?(i===Q.c?" right":" dim"):""}"><span class="sh">${SHAPE[i]}</span><span class="ot">${esc(o)}</span>${rev?`<span class="bar"><i style="width:${cnt[i]/mx*100}%"></i></span><b class="oc">${cnt[i]}</b>`:""}</div>`).join("")}</div>`+
-    (rev?`<div class="rev-row">${board(5)}<div class="actions">${q.i+1<q.list.length?`<button class="cta" id="lv-next">ข้อต่อไป</button>`:`<button class="cta" id="lv-wheel">ไปรอบคิดงาน</button>`}${q.i+1<q.list.length?`<button class="ghost" id="lv-wheel">ข้ามไปรอบคิดงาน</button>`:""}</div></div>`
+    (rev?`<div class="rev-row">${board(5)}<div class="actions">${q.i+1<q.list.length?`<button class="cta" id="lv-next">ข้อต่อไป</button>`:`<button class="cta" id="lv-final">ประกาศผู้ชนะ</button>`}</div></div>`
          :`<div class="actions"><span class="k">ตอบแล้ว ${Object.keys(q.ans).length}/${Object.keys(L.players).length}</span><button class="ghost" id="lv-reveal">เฉลยเลย</button></div>`);
   }else if(P==="create"){
     const c=L.cr,A=V[c.a],B=V[opp(c.a)],n=Object.values(c.subs).length;
@@ -198,10 +198,10 @@ function renderLive(){
   el.querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>kick(b.dataset.k));
   el.querySelectorAll("[data-j]").forEach(b=>b.onclick=()=>setJudge(b.dataset.j));
   el.querySelectorAll("[data-h]").forEach(b=>b.onclick=()=>hideSub(b.dataset.h));
-  if(P==="lobby")["o-qn","o-qs","o-cs"].forEach(id=>document.getElementById(id).onchange=readOpts);
+  if(P==="lobby")["o-qn","o-qs"].forEach(id=>document.getElementById(id).onchange=readOpts);
   const lt=document.getElementById("tab-live");if(lt)lt.classList.toggle("live-dot",true);
 }
 function readOpts(){const g=(id,lo,hi,d)=>Math.max(lo,Math.min(hi,parseInt(document.getElementById(id).value)||d));
-  L.opt={qn:g("o-qn",2,15,6),qs:g("o-qs",10,60,20),cs:g("o-cs",1,10,3)*60};lsave()}
+  L.opt={qn:g("o-qn",2,7,7),qs:g("o-qs",10,60,20),cs:L.opt.cs};lsave()}
 
 if(L&&L.code)connect();

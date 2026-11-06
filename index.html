@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Tension Lab</title>
+<title>Value Lab</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -202,15 +202,14 @@ main{flex:1;min-height:0;display:flex}
 </head><body>
 
 <header class="bar">
-  <div class="logo">TENSION <span>LAB</span></div>
+  <div class="logo">VALUE <span>LAB</span></div>
   <button class="pill" id="t-mini" aria-label="ตัวจับเวลา เปิดเมนู" hidden></button>
   <button class="pill" id="menu-btn" aria-label="เปิดเมนู" aria-expanded="false" aria-controls="menu"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14"/></svg></button>
   <div class="menu" id="menu"><div class="menu-in">
   <div class="menu-head"><h2>เมนู</h2><button class="pill" id="menu-close">ปิด</button></div>
   <nav class="tabs" role="tablist" aria-label="เมนู">
-    <button class="tab" role="tab" id="tab-play" aria-selected="true" data-v="play">เล่นเกม</button>
-    <button class="tab" role="tab" id="tab-examples" aria-selected="false" data-v="examples">ตัวอย่างแบรนด์</button>
-    <button class="tab" role="tab" id="tab-live" aria-selected="false" data-v="live">เล่นผ่านมือถือ</button>
+    <button class="tab" role="tab" id="tab-examples" aria-selected="true" data-v="examples">ตัวอย่างแบรนด์</button>
+    <button class="tab" role="tab" id="tab-live" aria-selected="false" data-v="live">Quiz</button>
   </nav>
   <div class="tools">
     <div class="timer" id="timer" aria-label="ตัวจับเวลา">
@@ -227,7 +226,7 @@ main{flex:1;min-height:0;display:flex}
 </header>
 
 <main>
-  <section class="view" id="play" aria-labelledby="tab-play">
+  <section class="view" id="play" hidden>
     <div class="wheel-wrap"><svg id="wheel" viewBox="0 0 600 600" role="img" aria-label="วงล้อคุณค่าพื้นฐาน 10 กลุ่ม"></svg></div>
     <div class="side-col" id="side">
       <button class="grab" id="grab" aria-controls="panel" hidden><i></i><span id="grab-t"></span></button>
@@ -235,7 +234,7 @@ main{flex:1;min-height:0;display:flex}
     </div>
   </section>
 
-  <section class="view" id="examples" aria-labelledby="tab-examples" hidden>
+  <section class="view" id="examples" aria-labelledby="tab-examples">
     <div class="bchips" id="bchips"></div>
     <div class="ex-body">
       <div class="mini"><svg id="mini" viewBox="0 0 600 600" role="img" aria-label="วงล้อแสดงคู่คุณค่าของแบรนด์ที่เลือก"></svg></div>
@@ -434,5 +433,5 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"){document.querySelec
 buildWheel();setNeedle();render();paint();
 </script>
 <script src="live.js"></script>
-<script>render();if(typeof L!=="undefined"&&L&&L.code)showTab("live");</script>
+<script>render();showTab(typeof L!=="undefined"&&L&&L.code?"live":"examples");</script>
 </body></html>

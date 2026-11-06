@@ -42,21 +42,14 @@ const SB={url:"https://bosbwrdkyrglsmrytekj.supabase.co",key:"eyJhbGciOiJIUzI1Ni
 const CHAN=code=>"tensionlab-"+code;
 const pairName=i=>V[pairOf(i)].th+" ↔ "+V[opp(pairOf(i))].th;
 
-/* Warm-up quiz: 2 fixed concept questions + generated ones from the wheel and brand examples. c = index of correct option. */
+/* Post-class test: 7 questions from the Brand Value Proposition deck, in teaching order. c = index of correct option; options are shuffled per game. */
 const QFIX=[
  {p:"ลำดับการคิด Brand Value Proposition ที่ถูกต้องคือข้อไหน",o:["ขุด → เช็ค → เลือก → ทำ","เลือก → ขุด → ทำ → เช็ค","ทำ → เช็ค → ขุด → เลือก","ขุด → ทำ → เลือก → เช็ค"],c:0},
- {p:"Insight ที่ดีควรมีอะไรอยู่ข้างใน",o:["ความลังเลในใจ: ให้คุณค่ากับสิ่งหนึ่ง แต่ก็ติดอีกสิ่ง","ตัวเลขสถิติของตลาด","ฟีเจอร์เด่นของสินค้า","สิ่งที่แบรนด์อยากพูด"],c:0}
+ {p:"สูตร Value Proposition คือข้อไหน",o:["Value + ใครแคร์ + เราให้อะไร + ทำไมต้องเป็นเรา","Feature + ราคา + ช่องทางขาย + โปรโมชัน","Insight + Big Idea + Execution + Media","สโลแกน + โลโก้ + พรีเซนเตอร์ + สีแบรนด์"],c:0},
+ {p:"บันได Consumer Benefit Laddering เรียงจากล่างขึ้นบนคือข้อไหน",o:["Feature → Functional → Emotional → Human Value","Functional → Feature → Human Value → Emotional","Emotional → Functional → Feature → Human Value","Feature → Emotional → Functional → Human Value"],c:0},
+ {p:"LEGO: “สนุก และภูมิใจในสิ่งที่ต่อเสร็จ” อยู่ขั้นไหนของบันได",o:["Emotional","Feature","Functional","Human Value"],c:0},
+ {p:"3 ข้อที่ใช้เช็คว่า value ไหนดีพอ คือข้อไหน",o:["Relevant · Credible · Compelling (แคร์ · เชื่อ · อยากเลือก)","Reach · Frequency · Impact","Awareness · Interest · Desire","Unique · Simple · Memorable"],c:0},
+ {p:"ทำไมต้องมีขั้น “เลือก” (Positioning)",o:["ปักหมุดว่าจะ own อะไร เพราะคู่แข่งให้ value ใกล้กันได้","เลือกสื่อและช่วงเวลาที่จะลงโฆษณา","เลือกกลุ่มเป้าหมายที่ใหญ่ที่สุดในตลาด","เลือกไอเดียโฆษณาที่ลูกค้าชอบที่สุด"],c:0},
+ {p:"อย่าถามแค่ว่า “เราจะพูดอะไรดี” ให้ถามว่าอะไร",o:["ทำไมเขาต้องแคร์?","เราจะพูดให้ดังได้ยังไง?","คู่แข่งพูดอะไรอยู่?","ใช้งบเท่าไหร่ถึงจะพอ?"],c:0}
 ];
-function mkQ(p,correct,wrong){const o=shuf([correct,...shuf(wrong).slice(0,3)]);return{p,o,c:o.indexOf(correct)}}
-function genQ(kind){
-  if(kind===0){const a=Math.floor(Math.random()*10);
-    return mkQ(`บนวงล้อ ฝั่งตรงข้ามของ “${V[a].th}” คืออะไร`,V[opp(a)].th,V.map((v,i)=>i).filter(i=>i!==a&&i!==opp(a)).map(i=>V[i].th))}
-  const e=EX[Math.floor(Math.random()*EX.length)];
-  if(kind===1){const cp=pairOf(e.v);
-    return mkQ(`“${e.who}ให้คุณค่ากับ${e.a} แต่ก็ติดที่${e.x}” อยู่คู่ไหนบนวงล้อ`,pairName(cp),[0,1,2,3,4].filter(i=>i!==cp).map(pairName))}
-  return mkQ(`${e.b}: ${e.who}ให้คุณค่ากับ${e.a} แต่ก็ติดที่${e.x} — แบรนด์ช่วยยังไง`,e.role,EX.filter(x=>x!==e).map(x=>x.role))
-}
-function buildQuiz(n){const out=QFIX.map(q=>({...q,o:q.o.slice()})).map(q=>{const c=q.o[q.c];q.o=shuf(q.o);q.c=q.o.indexOf(c);return q});
-  const seen=new Set(out.map(q=>q.p));let k=0,guard=0;
-  while(out.length<n&&guard++<200){const q=genQ(k%3);if(seen.has(q.p))continue;seen.add(q.p);out.push(q);k++}
-  return [out[0],...shuf(out.slice(1,n))].slice(0,n)}
+function buildQuiz(n){return QFIX.slice(0,n).map(q=>{const o=shuf(q.o);return{p:q.p,o,c:o.indexOf(q.o[q.c])}})}
