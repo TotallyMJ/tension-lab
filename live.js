@@ -45,6 +45,7 @@ function pub(){
     if(L.phase==="quizReveal"){st.q.c=Q.c;st.q.gain=q.gain}}
   if(["create","vote","voteReveal"].includes(L.phase)){const c=L.cr;
     st.cr={r:c.round,p:c.p,w:c.w,a:c.a,left:c.closed?0:Math.max(0,c.endsAt-nowMs()),closed:c.closed,done:Object.values(c.subs).filter(s=>!s.hid).map(s=>s.pid)};
+    if(c.pk){st.cr.pk=1;st.cr.top=c.top}
     if(L.phase!=="create")st.cr.list=visibleSubs().map(aid=>({aid,t:c.subs[aid].text}));
     if(L.phase==="vote")st.cr.voted=Object.keys(c.votes);
     if(L.phase==="voteReveal"){st.cr.cnt=voteCounts();st.cr.judge=c.judge}}
@@ -57,6 +58,7 @@ function pub(){
 
 /* ---------- incoming ---------- */
 const clean=(s,n)=>String(s||"").replace(/[\u0000-\u001f]/g," ").trim().slice(0,n);
+const cleanML=(s,n)=>String(s||"").replace(/[\u0000-\u0009\u000b-\u001f]/g," ").trim().slice(0,n);
 function onHello(p){
   const pid=clean(p.pid,24);if(!/^[a-z0-9]{6,24}$/.test(pid)||L.ban.includes(pid))return;
   const n=clean(p.n,20)||"ผู้เล่น";
@@ -72,7 +74,7 @@ function onAns(p){
 }
 function onSub(p){
   const c=L.cr;if(L.phase!=="create"||!c||c.closed||p.r!==c.round||!L.players[p.pid])return;
-  const aid=clean(p.aid,16),text=clean(p.text,280);if(!/^[a-z0-9]{6,16}$/.test(aid)||!text)return;
+  const aid=clean(p.aid,16),text=c.pk?cleanML(p.text,420):clean(p.text,280);if(!/^[a-z0-9]{6,16}$/.test(aid)||!text)return;
   if(c.subs[aid]&&c.subs[aid].pid!==p.pid)return;
   for(const k of Object.keys(c.subs))if(c.subs[k].pid===p.pid&&k!==aid){delete c.subs[k];c.order=c.order.filter(x=>x!==k)}
   if(!c.subs[aid])c.order.splice(Math.floor(Math.random()*(c.order.length+1)),0,aid);
@@ -136,6 +138,9 @@ function awards(){
 function startPick(){const b=L.pb||take();L.round++;L.pk={round:L.round,p:b.p,w:b.w,endsAt:nowMs()+(L.opt.ps||60)*1000,picks:{}};L.pb=null;L.phase="pick";lsave();renderLive();push()}
 function revealPick(){if(L.phase!=="pick")return;L.phase="pickReveal";lsave();renderLive();push()}
 function nextPick(){L.pb=take(L.pk&&L.pk.p);L.phase="lobby";lsave();renderLive();push()}
+function startPkCreate(){const k=L.pk,cnt=pickCounts(),top=cnt.map((n,i)=>[n,i]).filter(x=>x[0]).sort((a,b)=>b[0]-a[0]).slice(0,3).map(x=>x[1]);
+  L.cr={round:k.round,p:k.p,w:k.w,a:null,pk:1,top,dur:L.opt.cs,endsAt:nowMs()+L.opt.cs*1000,closed:false,subs:{},order:[],paid:{},votes:{},judge:null};
+  L.phase="create";lsave();renderLive();push()}
 function pickCounts(){const c=EOV.map(()=>0);Object.values(L.pk.picks).forEach(a=>a.forEach(i=>c[i]++));return c}
 function toFinal(){L.phase="final";lsave();renderLive();push()}
 function kick(pid){if(!confirmKick(pid))return;delete L.players[pid];L.ban.push(pid);lsave();renderLive();push()}
@@ -158,9 +163,9 @@ function board(n){const r=ranks();const ids=Object.keys(r).sort((a,b)=>r[a][1]-r
 function head(right){return`<div class="lv-top"><div class="lv-join"><div class="qr-s">${qrSvg(playURL())}</div><div><div class="k">เข้าร่วมที่</div><div class="lv-url">${esc(playURL().replace(/^https?:\/\//,""))}</div><div class="k">รหัสห้อง <b class="code">${L.code}</b> · ผู้เล่น ${Object.keys(L.players).length} คน · <span id="lv-conn" class="conn ${conn}">${conn==="on"?"เชื่อมต่อแล้ว":"กำลังเชื่อมต่อ…"}</span></div></div></div>${right||""}</div>`}
 
 function pyramid(c){const mx=Math.max(1,...c),top=c.indexOf(Math.max(...c)),zero=c.filter(x=>!x).length;
-  const tile=i=>`<div class="pt${c[i]?"":" z"}"${c[i]?` style="background:color-mix(in srgb,var(--yellow) ${Math.round(18+82*c[i]/mx)}%,var(--panel));color:${c[i]/mx>.45?"var(--ink)":"var(--fg)"}"`:""}>${esc(EOV[i][1])}<b>${c[i]||""}</b></div>`;
+  const tile=i=>`<div class="pt${c[i]?"":" z"}"${c[i]?` style="background:color-mix(in srgb,var(--yellow) ${Math.round(18+82*c[i]/mx)}%,var(--panel));color:${c[i]/mx>.45?"var(--ink)":"var(--fg)"}"`:""}>${eovH(i)}<b>${c[i]||""}</b></div>`;
   return`<div class="pyr">${EOVL.map((t,l)=>{const ids=EOV.map((e,i)=>e[0]===l?i:-1).filter(i=>i>=0),per=ids.length>7?Math.ceil(ids.length/2):ids.length,sum=ids.reduce((s,i)=>s+c[i],0);
-    let rows="";for(let j=0;j<ids.length;j+=per)rows+=`<div class="pyr-r">${ids.slice(j,j+per).map(tile).join("")}</div>`;return`<div class="pyr-l">${t} · ${sum} ครั้ง</div>${rows}`}).join("")}</div>
+    let rows="";for(let j=0;j<ids.length;j+=per)rows+=`<div class="pyr-r">${ids.slice(j,j+per).map(tile).join("")}</div>`;return`<div class="pyr-l">${EOVLE[l]} <small>${t}</small> · ${sum} ครั้ง</div>${rows}`}).join("")}</div>
   <p class="pyr-note">${c[top]?`ทั้งห้องเลือกมากที่สุด <b>${esc(EOV[top][1])}</b> ${c[top]} คน · `:""}ยังไม่มีใครเลือก ${zero} ช่อง</p><p class="pyr-src">ที่มา: Elements of Value, Bain &amp; Company</p>`}
 
 function renderLive(){
@@ -168,7 +173,7 @@ function renderLive(){
   const tm=window.liveTab==="pyr"?"pyr":"quiz";
   if(!L&&tm==="pyr"){el.innerHTML=`<div class="lv-start"><h2 class="lv-h">Pyramid</h2>
     <p class="lv-sub">Elements of Value · ผู้เล่นสแกน QR แล้วตั้งชื่อเล่น ไม่ต้องสมัครหรือติดตั้งอะไร</p>
-    <ol class="steps"><li><b>เลือก</b> ทุกคนเลือก 3 ช่องที่กลุ่มเป้าหมายแคร์ที่สุด</li><li><b>ดูภาพรวม</b> พีระมิดขึ้นสีตามจำนวนคนเลือก</li><li><b>คุยต่อ</b> ช่องที่ใคร ๆ ก็เลือก กับช่องที่ยังว่าง</li></ol>
+    <ol class="steps"><li><b>เลือก</b> ทุกคนเลือก 3 ช่องที่กลุ่มเป้าหมายแคร์ที่สุด</li><li><b>ดูภาพรวม</b> พีระมิดขึ้นสีตามจำนวนคนเลือก</li><li><b>เขียน VP</b> หยิบ 1 ช่องมาเขียน ใครแคร์ เราให้อะไร ทำไมต้องเป็นเรา</li><li><b>โหวต</b> เลือก VP ที่ชอบ แล้วประกาศผล</li></ol>
     <div class="actions"><button class="cta" id="lv-new">เปิดห้อง Pyramid</button></div></div>`;
     document.getElementById("lv-new").onclick=()=>newRoom("pyr");return}
   if(L&&(L.mode||"quiz")!==tm){const rm=L.mode==="pyr"?"Pyramid":"Quiz";
@@ -189,7 +194,7 @@ function renderLive(){
       <div class="k">ผู้เล่น ${ids.length} คน · <span id="lv-conn" class="conn ${conn}">${conn==="on"?"เชื่อมต่อแล้ว":"กำลังเชื่อมต่อ…"}</span>${ids.length?" · แตะชื่อ 2 ครั้งเพื่อนำออก":""}</div>
       <div class="names">${ids.map(id=>`<button class="nchip${kickArm===id?" arm":""}" data-k="${id}">${nm(id)}${kickArm===id?" ✕":""}</button>`).join("")}</div>
       ${pyr?`<div class="k">โจทย์รอบนี้</div><div class="pk-next"><b>${esc(L.pb.p)}</b> สำหรับ <b class="y">${esc(L.pb.w)}</b></div>
-      <div class="opts"><label>เวลาเลือก <input type="number" id="o-ps" min="20" max="180" value="${L.opt.ps||60}"> วินาที</label></div>
+      <div class="opts"><label>เวลาเลือก <input type="number" id="o-ps" min="20" max="180" value="${L.opt.ps||60}"> วินาที</label><label>เวลาเขียน <input type="number" id="o-cs" min="1" max="10" value="${Math.round((L.opt.cs||180)/60)}"> นาที</label></div>
       <div class="actions"><button class="cta" id="lv-pick">เริ่มให้เลือก</button><button class="ghost" id="lv-shuf">สุ่มโจทย์ใหม่</button><button class="link" id="lv-end">ปิดห้อง</button></div>`
       :`<div class="opts"><label>ควิซ <input type="number" id="o-qn" min="2" max="7" value="${L.opt.qn}"> ข้อ</label><label>ข้อละ <input type="number" id="o-qs" min="10" max="60" value="${L.opt.qs}"> วินาที</label></div>
       <div class="actions"><button class="cta" id="lv-quiz">เริ่มควิซ</button><button class="link" id="lv-end">ปิดห้อง</button></div>`}
@@ -201,30 +206,31 @@ function renderLive(){
     (rev?`<div class="rev-row">${board(5)}<div class="actions">${q.i+1<q.list.length?`<button class="cta" id="lv-next">ข้อต่อไป</button>`:`<button class="cta" id="lv-final">ประกาศผู้ชนะ</button>`}</div></div>`
          :`<div class="actions"><span class="k">ตอบแล้ว ${Object.keys(q.ans).length}/${Object.keys(L.players).length}</span><button class="ghost" id="lv-reveal">เฉลยเลย</button></div>`);
   }else if(P==="create"){
-    const c=L.cr,A=V[c.a],B=V[opp(c.a)],n=Object.values(c.subs).length;
-    h=head(`<div class="lv-meta"><span class="k">รอบคิดงาน ${c.round}</span><div class="count${c.closed?" low":""}" id="lv-count">${c.closed?"หมดเวลา":fmt(Math.ceil((c.endsAt-nowMs())/1000))}</div></div>`)+
+    const c=L.cr,A=c.pk?null:V[c.a],B=c.pk?null:V[opp(c.a)],n=Object.values(c.subs).length;
+    h=head(`<div class="lv-meta"><span class="k">${c.pk?"Pyramid รอบ "+c.round+" · เขียน VP":"รอบคิดงาน "+c.round}</span><div class="count${c.closed?" low":""}" id="lv-count">${c.closed?"หมดเวลา":fmt(Math.ceil((c.endsAt-nowMs())/1000))}</div></div>`)+
+    (c.pk?`<div class="pk-brief"><div class="prod">${esc(c.p)}</div><div class="who">สำหรับ <b>${esc(c.w)}</b></div><p class="lv-sub">เขียน VP จากช่องที่เลือก · ใครแคร์ · เราให้อะไร · ทำไมต้องเป็นเรา</p></div>`:
     `<div class="cr-brief"><div class="prod">${esc(c.p)}</div><div class="who">สำหรับ <b>${esc(c.w)}</b></div>
       <p class="cr-pair"><span class="dot a"></span> ให้คุณค่ากับ <b>${A.vn}</b> &nbsp; <span class="dot b"></span> แต่ก็ติดที่ <b>${B.pull}</b></p>
-      <p class="q"><em>${esc(c.p)}</em> ควรสื่อสารในแง่ไหน เพื่อช่วย<em>${esc(c.w)}</em>ที่ลังเลนี้?</p></div>
-    <div class="big-n"><b>${n}</b><span>/${Object.keys(L.players).length} ส่งคำตอบแล้ว</span></div>
+      <p class="q"><em>${esc(c.p)}</em> ควรสื่อสารในแง่ไหน เพื่อช่วย<em>${esc(c.w)}</em>ที่ลังเลนี้?</p></div>`)+
+    `<div class="big-n${c.pk?" pk-n":""}"><b>${n}</b><span>/${Object.keys(L.players).length} ส่งคำตอบแล้ว</span></div>
     <div class="actions"><button class="cta" id="lv-vote">ไปโหวต</button><button class="ghost" id="lv-add">+1 นาที</button>${c.closed?"":`<button class="ghost" id="lv-close">ปิดรับคำตอบ</button>`}</div>`;
   }else if(P==="vote"||P==="voteReveal"){
     const c=L.cr,rev=P==="voteReveal",cnt=voteCounts();let list=c.order.filter(a=>c.subs[a]);
     if(rev)list=list.filter(a=>!c.subs[a].hid).sort((x,y)=>(cnt[y]||0)-(cnt[x]||0));
     const top=new Set(list.slice(0,3).filter(a=>cnt[a]));
     h=head(`<div class="lv-meta"><span class="k">${rev?"ผลโหวต":"โหวต · เลือกได้คนละ 2 คำตอบในมือถือ"}</span>${rev?"":`<span class="k">โหวตแล้ว ${Object.keys(c.votes).length}/${Object.keys(L.players).length}</span>`}</div>`)+
-    `<p class="q small"><em>${esc(c.p)}</em> สำหรับ <em>${esc(c.w)}</em> · ให้คุณค่ากับ${V[c.a].vn} แต่ก็ติดที่${V[opp(c.a)].pull}</p>`+
+    `<p class="q small"><em>${esc(c.p)}</em> สำหรับ <em>${esc(c.w)}</em>${c.pk?"":` · ให้คุณค่ากับ${V[c.a].vn} แต่ก็ติดที่${V[opp(c.a)].pull}`}</p>`+
     (list.length?`<div class="cards${list.length>8?" dense":""}">${list.map((aid,i)=>{const s=c.subs[aid];const showName=rev&&s.show&&(top.has(aid)||c.judge===aid);
       return`<div class="card${s.hid?" hid":""}${rev&&c.judge===aid?" judge":""}">${rev?"":`<span class="cn">${i+1}</span>`}<p>${esc(s.text)}</p>
         <div class="cf">${rev?`<b class="vc">${cnt[aid]||0} โหวต</b>${showName?`<span class="by">— ${nm(s.pid)}</span>`:""}<button class="jb" data-j="${aid}" aria-pressed="${c.judge===aid}">${c.judge===aid?"★ Judge’s pick":"เลือกเป็น Judge’s pick"}</button>`:`<button class="link hb" data-h="${aid}">${s.hid?"แสดง":"ซ่อน"}</button>`}</div></div>`}).join("")}</div>`:`<p class="empty">ยังไม่มีคำตอบ</p>`)+
-    `<div class="actions">${rev?`<button class="cta" id="lv-wheel">รอบคิดงานถัดไป</button><button class="ghost" id="lv-final">สรุปผลและรางวัล</button>`:`<button class="cta" id="lv-cvote">ปิดโหวตและดูผล</button>`}</div>`;
+    `<div class="actions">${rev?`${c.pk?`<button class="cta" id="lv-pnext">โจทย์ใหม่</button>`:`<button class="cta" id="lv-wheel">รอบคิดงานถัดไป</button>`}<button class="ghost" id="lv-final">สรุปผลและรางวัล</button>`:`<button class="cta" id="lv-cvote">ปิดโหวตและดูผล</button>`}</div>`;
   }else if(P==="pick"||P==="pickReveal"){
     const k=L.pk,rev=P==="pickReveal",n=Object.keys(k.picks).length,left=Math.ceil(Math.max(0,k.endsAt-nowMs())/1000);
     h=head(`<div class="lv-meta"><span class="k">Pyramid รอบ ${k.round}</span>${rev?`<span class="k">เลือกแล้ว ${n} คน</span>`:`<div class="count" id="lv-count">${left>=60?fmt(left):left}</div>`}</div>`)+
-    (rev?`<p class="pk-line"><b>${esc(k.p)}</b> สำหรับ <b class="y">${esc(k.w)}</b></p>${pyramid(pickCounts())}`
+    (rev?`<p class="pk-line"><b>${esc(k.p)}</b> ให้คุณค่ากับ <b class="y">${esc(k.w)}</b> ในมุมไหนได้บ้าง</p>${pyramid(pickCounts())}`
         :`<div class="pk-brief"><div class="prod">${esc(k.p)}</div><div class="who">สำหรับ <b>${esc(k.w)}</b></div><p class="lv-sub">ทุกคนเลือก 3 ช่องที่คนกลุ่มนี้แคร์ที่สุดในมือถือ</p></div>
          <div class="big-n pk-n"><b>${n}</b><span>/${Object.keys(L.players).length} ส่งแล้ว</span></div>`)+
-    `<div class="actions">${rev?`<button class="cta" id="lv-pnext">โจทย์ใหม่</button><button class="link" id="lv-end">ปิดห้อง</button>`:`<button class="ghost" id="lv-preveal">เฉลยเลย</button>`}</div>`;
+    `<div class="actions">${rev?`<button class="cta" id="lv-pcreate">เขียน VP</button><button class="ghost" id="lv-pnext">โจทย์ใหม่</button><button class="link" id="lv-end">ปิดห้อง</button>`:`<button class="ghost" id="lv-preveal">เฉลยเลย</button>`}</div>`;
   }else if(P==="final"){
     const a=awards(),r=ranks();
     h=head()+`<h2 class="lv-h">สรุปผล</h2><div class="podium">${[1,0,2].map(i=>a.top[i]?`<div class="pd p${i+1}"><div class="pn">${nm(a.top[i])}</div><div class="ps">${r[a.top[i]][0]}</div><div class="pb">${r[a.top[i]][1]}</div></div>`:"").join("")}</div>
@@ -237,16 +243,16 @@ function renderLive(){
   on("lv-quiz",()=>{readOpts();startQuiz()});on("lv-next",nextQ);on("lv-reveal",revealQuiz);
   on("lv-wheel",()=>{if(P==="lobby")readOpts();showTab("play")});on("lv-end",endRoom);
   on("lv-vote",startVote);on("lv-add",()=>addTime(60));on("lv-close",closeSubs);on("lv-cvote",closeVote);on("lv-final",toFinal);
-  on("lv-pick",()=>{readOpts();startPick()});on("lv-preveal",revealPick);on("lv-pnext",nextPick);
+  on("lv-pick",()=>{readOpts();startPick()});on("lv-preveal",revealPick);on("lv-pnext",nextPick);on("lv-pcreate",startPkCreate);
   on("lv-shuf",()=>{L.pb=take(L.pb&&L.pb.p);lsave();renderLive()});
   on("lv-back",()=>{L.phase="lobby";lsave();renderLive();push()});
   el.querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>kick(b.dataset.k));
   el.querySelectorAll("[data-j]").forEach(b=>b.onclick=()=>setJudge(b.dataset.j));
   el.querySelectorAll("[data-h]").forEach(b=>b.onclick=()=>hideSub(b.dataset.h));
-  if(P==="lobby")["o-qn","o-qs","o-ps"].forEach(id=>{const e=document.getElementById(id);if(e)e.onchange=readOpts});
+  if(P==="lobby")["o-qn","o-qs","o-ps","o-cs"].forEach(id=>{const e=document.getElementById(id);if(e)e.onchange=readOpts});
   const lt=document.getElementById("tab-live");if(lt)lt.classList.toggle("live-dot",true);
 }
 function readOpts(){const g=(id,lo,hi,d)=>Math.max(lo,Math.min(hi,parseInt((document.getElementById(id)||{}).value)||d));
-  L.opt={qn:g("o-qn",2,7,L.opt.qn||7),qs:g("o-qs",10,60,L.opt.qs||20),cs:L.opt.cs,ps:g("o-ps",20,180,L.opt.ps||60)};lsave()}
+  L.opt={qn:g("o-qn",2,7,L.opt.qn||7),qs:g("o-qs",10,60,L.opt.qs||20),cs:g("o-cs",1,10,Math.round((L.opt.cs||180)/60))*60,ps:g("o-ps",20,180,L.opt.ps||60)};lsave()}
 
 if(L&&L.code)connect();

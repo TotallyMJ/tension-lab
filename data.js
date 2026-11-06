@@ -55,7 +55,8 @@ const QFIX=[
 function buildQuiz(n){return QFIX.slice(0,n).map(q=>{const o=shuf(q.o);return{p:q.p,o,c:o.indexOf(q.o[q.c])}})}
 
 /* Pyramid game: the 30 B2C Elements of Value (Bain & Company), top tier first. [tier index into EOVL, Thai name, English name] */
-const EOVL=["ผลต่อสังคม","ชีวิตเปลี่ยน","อารมณ์","ใช้งาน"];
+const EOVL=["ผลต่อสังคม","ชีวิตเปลี่ยน","อารมณ์","ใช้งาน"],EOVLE=["Social impact","Life changing","Emotional","Functional"];
+const eovH=i=>`${esc(EOV[i][2])}<small>${esc(EOV[i][1])}</small>`; /* English first, Thai small underneath */
 const EOV=[
  [0,"ช่วยสิ่งที่ใหญ่กว่าตัวเอง","Self-transcendence"],
  [1,"ให้ความหวัง","Provides hope"],[1,"ได้เป็นตัวเองเต็มที่","Self-actualization"],[1,"ให้แรงผลักดัน","Motivation"],[1,"ส่งต่อให้รุ่นหลัง","Heirloom"],[1,"ได้เป็นส่วนหนึ่ง","Affiliation/belonging"],

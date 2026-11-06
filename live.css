@@ -78,6 +78,7 @@
 .pt:only-child{width:auto;padding-inline:18px}
 .pt b{font-size:1.15em;font-weight:800;font-variant-numeric:tabular-nums}
 .pt.z{color:var(--muted)}
+.pt small,.pyr-l small{font-size:.85em;opacity:.75}
 .pyr-note{text-align:center;margin:4px 0 0;font-size:1.05rem}.pyr-note b{color:var(--yellow)}
 .pyr-src{text-align:center;margin:0;font-size:.8rem;color:var(--muted)}
 .podium{display:flex;align-items:flex-end;justify-content:center;gap:14px;margin-top:8px}
@@ -89,7 +90,7 @@
 .awards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(280px,100%),1fr));gap:12px}
 .aw{background:var(--panel);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:6px}
 .aw b{font-size:1.4rem;color:var(--yellow)}
-.aw p{margin:0;line-height:1.45}
+.aw p{margin:0;line-height:1.45;white-space:pre-wrap}
 .tab.live-dot{position:relative}
 @media (pointer:coarse),(max-width:1023px){.nchip,.jb,.opts input{min-height:44px}}
 /* phone: the next step stays in reach, however long the page gets */
