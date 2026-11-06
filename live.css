@@ -74,7 +74,7 @@
 .pyr{display:flex;flex-direction:column;align-items:center;gap:6px}
 .pyr-l{text-align:center;font-size:.85rem;color:var(--muted);margin-top:6px}
 .pyr-r{display:flex;justify-content:center;flex-wrap:wrap;gap:6px}
-.pt{width:clamp(76px,10.5vw,138px);min-height:clamp(50px,6.5vh,72px);border-radius:10px;background:var(--panel);color:var(--fg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-align:center;padding:6px;font-size:clamp(.78rem,1.05vw,.98rem);line-height:1.25}
+.pt{width:clamp(76px,10.5vw,138px);min-height:clamp(50px,6.5vh,72px);border-radius:10px;background:var(--panel);color:var(--fg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-align:center;padding:6px;font-size:clamp(.78rem,1.05vw,.98rem);line-height:1.25;hyphens:auto;overflow-wrap:anywhere}
 .pt:only-child{width:auto;padding-inline:18px}
 .pt b{font-size:1.15em;font-weight:800;font-variant-numeric:tabular-nums}
 .pt.z{color:var(--muted)}

@@ -113,6 +113,20 @@ main{flex:1;min-height:0;display:flex}
 .ex-kv dt{color:var(--muted)}
 .ex-kv dd{margin:0}
 .foot{color:var(--muted);font-size:.85rem;margin:0}
+/* elements: clickable pyramid left, explanation right (stacks on narrow screens) */
+#elements{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,340px);gap:20px 28px;align-items:start}
+@media (max-width:1100px){#elements{grid-template-columns:1fr}}
+#elements .pyr-r{width:100%}
+#elements .pt{width:max(72px,min(120px,calc((100% - 36px)/7)));font-size:clamp(.75rem,.95vw,.9rem);border:none;font-family:inherit}
+#elements .pt:only-child{width:auto}
+@media (max-width:600px){#elements .pt{width:104px}}
+#elements .pt:hover{background:var(--line)}
+#elements .pt[aria-pressed="true"]{background:var(--yellow);color:var(--ink)}
+.el-info{background:var(--panel);border-radius:16px;padding:22px;position:sticky;top:16px;max-width:none}
+.el-info .ex-brand{font-size:clamp(1.8rem,3vw,2.6rem)}
+.el-th{margin:-10px 0 0;font-size:1.2rem;color:var(--muted)}
+.el-q{color:var(--yellow)}
+#elements .foot{grid-column:1/-1}
 
 /* dialogs */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);display:grid;place-items:center;z-index:20;padding:20px}
@@ -210,6 +224,7 @@ main{flex:1;min-height:0;display:flex}
   <div class="menu-head"><h2>เมนู</h2><button class="pill" id="menu-close">ปิด</button></div>
   <nav class="tabs" role="tablist" aria-label="เมนู">
     <button class="tab" role="tab" id="tab-examples" aria-selected="true" data-v="examples">ตัวอย่างแบรนด์</button>
+    <button class="tab" role="tab" id="tab-elements" aria-selected="false" data-v="elements">Elements</button>
     <button class="tab" role="tab" id="tab-live" aria-selected="false" data-v="live">Quiz</button>
     <button class="tab" role="tab" id="tab-pyr" aria-selected="false" data-v="pyr">Pyramid</button>
   </nav>
@@ -243,6 +258,12 @@ main{flex:1;min-height:0;display:flex}
       <div class="ex-info" id="ex-info"></div>
     </div>
     <p class="foot">ตัวอย่างเป็นการตีความเพื่อการเรียนรู้ ไม่ใช่ข้อมูลจากแบรนด์</p>
+  </section>
+
+  <section class="view" id="elements" aria-labelledby="tab-elements" hidden>
+    <div class="pyr" id="el-pyr"></div>
+    <div class="ex-info el-info" id="el-info" aria-live="polite"></div>
+    <p class="foot">ที่มา: Elements of Value, Bain &amp; Company · คำอธิบายและตัวอย่างเป็นการตีความเพื่อการเรียนรู้</p>
   </section>
 
   <section class="view" id="live" aria-labelledby="tab-live" hidden></section>
@@ -288,7 +309,7 @@ const parsePair=s=>{const [p,w]=s.split("|").map(x=>x.trim());return{p,w:w||"ก
 
 /* views */
 function showTab(v){window.liveTab=v;document.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-selected",x.dataset.v===v));
-  const s=v==="pyr"?"live":v;["play","examples","live"].forEach(k=>$(k).hidden=k!==s);if(v==="examples")renderEx();if(s==="live"&&typeof renderLive==="function")renderLive();if(v==="play")render();closeMenu()}
+  const s=v==="pyr"?"live":v;["play","examples","live","elements"].forEach(k=>$(k).hidden=k!==s);if(v==="examples")renderEx();if(v==="elements")renderEl();if(s==="live"&&typeof renderLive==="function")renderLive();if(v==="play")render();closeMenu()}
 document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>showTab(t.dataset.v));
 function openMenu(){$("menu").classList.add("open");$("menu-btn").setAttribute("aria-expanded",true);$("menu-close").focus()}
 function closeMenu(){if(!$("menu").classList.contains("open"))return;$("menu").classList.remove("open");$("menu-btn").setAttribute("aria-expanded",false);$("menu-btn").focus()}
@@ -409,6 +430,18 @@ function startTimer(){if(tInt||tLeft<=0)return;try{actx=actx||new (window.AudioC
 function stopTimer(){clearInterval(tInt);tInt=null;paint()}
 function beep(){if(!actx)return;try{[0,.35,.7].forEach(t=>{const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=880;o.connect(g);g.connect(actx.destination);g.gain.setValueAtTime(.25,actx.currentTime+t);g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+t+.3);o.start(actx.currentTime+t);o.stop(actx.currentTime+t+.3)})}catch(e){}}
 $("t-2").onclick=()=>setTimer(120);$("t-5").onclick=()=>setTimer(300);$("t-play").onclick=()=>tInt?stopTimer():startTimer();$("t-reset").onclick=()=>setTimer(tSet);
+
+/* elements of value: teaching view, same tier rows as the Pyramid heatmap */
+let elI=null;
+function renderEl(){
+  $("el-pyr").innerHTML=EOVL.map((t,l)=>{const ids=EOV.map((e,i)=>e[0]===l?i:-1).filter(i=>i>=0),per=ids.length>7?Math.ceil(ids.length/2):ids.length;let rows="";
+    for(let j=0;j<ids.length;j+=per)rows+=`<div class="pyr-r">${ids.slice(j,j+per).map(i=>`<button class="pt" data-i="${i}" aria-pressed="${i===elI}">${eovH(i)}</button>`).join("")}</div>`;
+    return`<div class="pyr-l">${EOVLE[l]} <small>${t}</small></div>${rows}`}).join("");
+  $("el-pyr").querySelectorAll(".pt").forEach(b=>b.onclick=()=>{elI=+b.dataset.i;renderEl();$("el-pyr").querySelector(`[data-i="${elI}"]`).focus({preventScroll:true});if(matchMedia("(max-width:1100px)").matches)$("el-info").scrollIntoView({behavior:"smooth",block:"nearest"})});
+  const e=EOV[elI],d=EOVD[elI];
+  $("el-info").innerHTML=e?`<span class="k">${EOVLE[e[0]]} · ${EOVL[e[0]]}</span><h2 class="ex-brand">${esc(e[2])}</h2><p class="el-th">${esc(e[1])}</p>
+    <dl class="ex-kv"><dt>คืออะไร</dt><dd>${esc(d[0])}</dd><dt>ตัวอย่าง</dt><dd>${esc(d[1])}</dd><dt>ชวนคิด</dt><dd class="el-q">${esc(d[2])}</dd></dl>`
+    :`<h2 class="ex-t">คลิกช่องไหนก็ได้ในพีระมิด</h2><p style="margin:0">ดูว่าคุณค่านั้นคืออะไร พร้อมตัวอย่างแบรนด์และคำถามชวนคิด</p><p class="k" style="margin:0">ชั้นล่างคือประโยชน์ใช้งาน ยิ่งขึ้นไปข้างบนยิ่งเป็นคุณค่าที่ลึกขึ้น</p>`}
 
 /* pick table */
 const used=new Set();let picking=false;
