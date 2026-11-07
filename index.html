@@ -10,6 +10,8 @@
 :root{
   --bg:#f2f2ef; --panel:#ffffff; --line:#e2e2de; --fg:#1c1d1f; --muted:#5d5f63; --yellow:#ffe500; --ink:#121210;
   --accent-t:#7d6000; --ok:#1f7a3d; --bad:#c2331f;
+  --grp-open:#dfe9f7; --grp-self:#f7e3dc; --grp-keep:#e6efdc; --grp-others:#ede4f4;
+  --grp-open-ring:#b9cfee; --grp-self-ring:#efc4b4; --grp-keep-ring:#c9ddb5; --grp-others-ring:#d6c4e6; /* Schwartz higher-order groups on the Human Values wheel */
   /* type scale (DESIGN-DEFAULTS 4) + --fs-3xl: projector-only numbers read from the back row */
   --fs-xs:12px; --fs-s:14px; --fs-m:16px; --fs-l:20px; --fs-xl:24px; --fs-2xl:clamp(32px,6vw,48px); --fs-3xl:clamp(48px,7vw,80px);
   --font:"Prompt","Noto Sans Thai","Leelawadee UI",Tahoma,sans-serif;
@@ -232,7 +234,7 @@ main{flex:1;min-height:0;display:flex}
   <button class="pill" id="menu-btn" aria-label="เปิดเมนู" aria-expanded="false" aria-controls="menu"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14"/></svg></button>
   <div class="menu" id="menu"><div class="menu-in">
   <div class="menu-head"><h2>เมนู</h2><button class="pill" id="menu-close">ปิด</button></div>
-  <nav class="tabs" aria-label="บทเรียน"><button class="module-tab" data-course="human" aria-pressed="true"><span>01</span>Human Values</button><button class="module-tab" data-course="benefits" aria-pressed="false"><span>02</span>Brand Benefits</button></nav>
+  <nav class="tabs" aria-label="บทเรียน"><button class="module-tab" data-course="human" aria-pressed="true"><span>01</span>Human Values</button><button class="module-tab" data-course="benefits" aria-pressed="false"><span>02</span>Brand Benefits</button><button class="module-tab" data-course="quiz" aria-pressed="false"><span>03</span>Quiz</button></nav>
   <div class="tools">
     <div class="timer" id="timer" aria-label="ตัวจับเวลา">
       <output id="t-out">05:00</output>
@@ -247,12 +249,11 @@ main{flex:1;min-height:0;display:flex}
   </div></div>
 </header>
 
-<div class="course-shell"><p class="course-eyebrow" id="course-eyebrow"></p><h1 id="course-title"></h1><p class="course-description" id="course-description"></p><nav class="course-tabs" id="course-tabs" role="tablist" aria-label="ขั้นตอนการเรียน"><button class="stage-tab" id="stage-learn" role="tab" data-stage="learn" aria-selected="true">เรียนรู้</button><button class="stage-tab" id="stage-quiz" role="tab" data-stage="quiz" aria-selected="false" tabindex="-1">Quiz · Value Lab</button></nav></div>
+<div class="course-shell"><p class="course-eyebrow" id="course-eyebrow"></p><h1 id="course-title"></h1><p class="course-description" id="course-description"></p><div class="course-facts" id="course-facts" hidden></div></div>
 <main>
 <section class="view" id="human-lesson" aria-label="เรียนรู้ Human Values" hidden>
-<div class="human-picker" id="human-picker" aria-label="เลือกคุณค่าที่ต้องการเรียนรู้"></div>
-<div class="learning-panel"><div class="value-map"><svg id="human-map" viewBox="0 0 600 600" role="group" aria-label="สำรวจคุณค่าพื้นฐาน 10 กลุ่ม"></svg></div><div class="learning-detail" id="human-detail" aria-live="polite"></div></div>
-<div class="discussion"><span>ชวนคิด</span><p id="human-question"></p></div>
+<div class="learning-panel"><div class="value-map"><svg id="human-map" viewBox="-20 -20 640 640" role="group" aria-label="สำรวจคุณค่าพื้นฐาน 10 กลุ่ม"></svg><p class="wheel-caption">ฝั่งตรงข้ามมักดึงกัน: เปิดรับสิ่งใหม่ ↔ รักษาสิ่งเดิม · เน้นตัวเอง ↔ เพื่อคนอื่น</p></div><div class="learning-detail" id="human-detail" aria-live="polite"></div></div>
+<section class="human-subs" id="human-subs" hidden></section>
 <p class="foot human-note">คนหนึ่งให้ความสำคัญได้หลายคุณค่า และเลือกต่างกันตามสถานการณ์ วงล้อแสดงความใกล้เคียงและความตึงเครียดระหว่างแรงจูงใจ ไม่ใช่การแบ่งคนเป็น 10 ประเภท</p>
 </section>
   <section class="view" id="play" hidden>
@@ -280,12 +281,16 @@ main{flex:1;min-height:0;display:flex}
     <p class="foot">ที่มา: Elements of Value, Bain &amp; Company · คำอธิบายและตัวอย่างเป็นการตีความเพื่อการเรียนรู้</p>
   </section>
 
+  <section class="view" id="quiz-pick" aria-label="เลือก Quiz" hidden><div class="quiz-cards">
+    <article class="quiz-card"><small>ทบทวนบทที่ 1</small><h2 lang="en">Value Lab</h2><p>7 ข้อ คำตอบเดียว นับคะแนน</p><button class="lesson-next" data-quiz="value">เปิดห้อง →</button></article>
+    <article class="quiz-card"><small>ประยุกต์บทที่ 2</small><h2 lang="en">Pyramid Lab</h2><p>เลือกคุณค่า เขียน VP แล้วโหวต</p><button class="lesson-next" data-quiz="pyramid">เปิดห้อง →</button></article>
+  </div></section>
   <section class="view" id="live" aria-label="กิจกรรมท้ายบท" hidden></section>
 </main>
-<footer class="lesson-footer course-shell" id="lesson-bottom"><p id="lesson-source"></p><button class="lesson-next" id="lesson-next">ดูตัวอย่างแบรนด์ →</button></footer>
+<footer class="lesson-footer course-shell" id="lesson-bottom"><p id="lesson-source"></p></footer>
 
 <dialog id="benefit-dialog" aria-labelledby="benefit-dialog-title">
-  <header class="benefit-dialog-header"><div class="benefit-dialog-heading"><h2 id="benefit-dialog-title" lang="en"></h2><p id="benefit-dialog-subtitle"></p></div><button id="benefit-dialog-close" aria-label="ปิดคำอธิบาย" autofocus>ปิด ×</button></header>
+  <header class="benefit-dialog-header"><div class="benefit-dialog-heading"><p class="benefit-tier-chip" id="benefit-dialog-tier"></p><h2 id="benefit-dialog-title"><span lang="en" id="benefit-dialog-en"></span> <span id="benefit-dialog-subtitle"></span></h2></div><button id="benefit-dialog-close" aria-label="ปิดคำอธิบาย" autofocus>ปิด ×</button></header>
   <div id="benefit-dialog-body"></div>
 </dialog>
 <div class="overlay" id="pick-dlg" hidden>

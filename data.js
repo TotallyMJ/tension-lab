@@ -91,10 +91,10 @@ const EOVD=[
 ];
 const eovH=i=>`<span lang="en">${esc(EOV[i][2]).replace(/\//g,"/<wbr>")}</span><small>${esc(EOV[i][1])}</small>`; /* English first, Thai small underneath */
 const EOV=[
- [0,"ช่วยสิ่งที่ใหญ่กว่าตัวเอง","Self-transcendence"],
- [1,"ให้ความหวัง","Provides hope"],[1,"ได้เป็นตัวเองเต็มที่","Self-actualization"],[1,"ให้แรงผลักดัน","Motivation"],[1,"ส่งต่อให้รุ่นหลัง","Heirloom"],[1,"ได้เป็นส่วนหนึ่ง","Affiliation/belonging"],
- [2,"ลดความกังวล","Reduces anxiety"],[2,"ให้รางวัลตัวเอง","Rewards me"],[2,"ชวนคิดถึงวันเก่า","Nostalgia"],[2,"ดีไซน์สวย","Design/aesthetics"],[2,"บอกตัวตน","Badge value"],
- [2,"สุขภาพดี","Wellness"],[2,"ช่วยผ่อนคลาย","Therapeutic value"],[2,"สนุก","Fun/entertainment"],[2,"ทำให้ดูดี","Attractiveness"],[2,"เข้าถึงสิ่งพิเศษ","Provides access"],
- [3,"ประหยัดเวลา","Saves time"],[3,"ทำให้ง่าย","Simplifies"],[3,"ช่วยหาเงิน","Makes money"],[3,"ลดความเสี่ยง","Reduces risk"],[3,"จัดระเบียบ","Organizes"],[3,"รวมทุกอย่างไว้ที่เดียว","Integrates"],[3,"เชื่อมคนถึงกัน","Connects"],
- [3,"ไม่ต้องออกแรง","Reduces effort"],[3,"ไม่ยุ่งยาก","Avoids hassles"],[3,"ประหยัดเงิน","Reduces cost"],[3,"คุณภาพดี","Quality"],[3,"มีให้เลือกเยอะ","Variety"],[3,"ถูกใจประสาทสัมผัส","Sensory appeal"],[3,"ให้ข้อมูล","Informs"]
+ [0,"ช่วยสิ่งที่​ใหญ่กว่าตัวเอง","Self-transcendence"],
+ [1,"ให้ความหวัง","Provides hope"],[1,"ได้เป็นตัวเอง​เต็มที่","Self-actualization"],[1,"ให้แรง​ผลักดัน","Motivation"],[1,"ส่งต่อ​ให้รุ่นหลัง","Heirloom"],[1,"ได้เป็น​ส่วนหนึ่ง","Affiliation/belonging"],
+ [2,"ลด​ความกังวล","Reduces anxiety"],[2,"ให้รางวัล​ตัวเอง","Rewards me"],[2,"ชวนคิดถึง​วันเก่า","Nostalgia"],[2,"ดีไซน์สวย","Design/aesthetics"],[2,"บอกตัวตน","Badge value"],
+ [2,"สุขภาพดี","Wellness"],[2,"ช่วย​ผ่อนคลาย","Therapeutic value"],[2,"สนุก","Fun/entertainment"],[2,"ทำให้ดูดี","Attractiveness"],[2,"เข้าถึง​สิ่งพิเศษ","Provides access"],
+ [3,"ประหยัด​เวลา","Saves time"],[3,"ทำให้ง่าย","Simplifies"],[3,"ช่วยหาเงิน","Makes money"],[3,"ลด​ความเสี่ยง","Reduces risk"],[3,"จัดระเบียบ","Organizes"],[3,"รวมทุกอย่าง​ไว้ที่เดียว","Integrates"],[3,"เชื่อมคน​ถึงกัน","Connects"],
+ [3,"ไม่ต้อง​ออกแรง","Reduces effort"],[3,"ไม่ยุ่งยาก","Avoids hassles"],[3,"ประหยัด​เงิน","Reduces cost"],[3,"คุณภาพดี","Quality"],[3,"มีให้เลือก​เยอะ","Variety"],[3,"ถูกใจ​ประสาทสัมผัส","Sensory appeal"],[3,"ให้ข้อมูล","Informs"]
 ];
